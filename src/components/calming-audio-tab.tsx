@@ -4,24 +4,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 
 const audioTracks = [
     {
-        title: "Poco",
-        artist: "Roo Walker",
-        url: "https://cdn.pixabay.com/audio/2022/11/11/audio_a7a4a91a92.mp3",
-        uppbeatUrl: "https://pixabay.com/music/unplugged-poco-125942/",
+        title: "Relaxing Music",
+        artist: "ZenLife",
+        url: "https://cdn.pixabay.com/audio/2022/10/18/audio_73b906236b.mp3",
+        uppbeatUrl: "https://pixabay.com/music/meditation-spiritual-relaxing-music-for-stress-relief-zen-yoga-meditation-123301/",
         license: "Pixabay License"
     },
     {
-        title: "Winter Storm",
-        artist: "Brock Hewitt",
-        url: "https://cdn.pixabay.com/audio/2023/10/26/audio_a70a84aa24.mp3",
-        uppbeatUrl: "https://pixabay.com/music/ambient-winter-storm-173531/",
+        title: "Calm and Peaceful",
+        artist: "Lesfm",
+        url: "https://cdn.pixabay.com/audio/2023/10/02/audio_145d2a912e.mp3",
+        uppbeatUrl: "https://pixabay.com/music/beautiful-plays-calm-and-peaceful-169219/",
         license: "Pixabay License"
     },
      {
-        title: "Rain and Thunder",
-        artist: "Relaxing Sounds",
-        url: "https://cdn.pixabay.com/audio/2021/08/17/audio_9a36dc8a99.mp3",
-        uppbeatUrl: "https://pixabay.com/sound-effects/rain-and-thunder-14115/",
+        title: "Forest Sounds",
+        artist: "SoundsForYou",
+        url: "https://cdn.pixabay.com/audio/2022/08/04/audio_2bbe6a6a4c.mp3",
+        uppbeatUrl: "https://pixabay.com/sound-effects/forest-sound-114420/",
         license: "Pixabay License"
     }
 ];
