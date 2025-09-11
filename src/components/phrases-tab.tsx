@@ -42,7 +42,7 @@ const PhraseList = ({
   };
   
   const speakText = (text: string) => {
-    const utterance = new SpeechSynthesisUtterance(`${type} ${text}`);
+    const utterance = new SpeechSynthesisUtterance(`I ${type} ${text}`);
     window.speechSynthesis.speak(utterance);
     const updatedPhrases = phrases.map(p => p.text === text ? {...p, usageCount: p.usageCount + 1} : p);
     setPhrases(updatedPhrases);
@@ -152,11 +152,11 @@ export default function PhrasesTab() {
                 <CardContent className="max-h-96 overflow-y-auto space-y-2">
                     {favorites.length === 0 ? <p className="text-muted-foreground">No favorites yet.</p> : null}
                     {favorites.filter(f => f.type === 'want').length > 0 && <h4 className="font-semibold">Want</h4>}
-                    {favorites.filter(f => f.type === 'want').map(fav => <p key={fav.text} className="p-2 bg-secondary rounded-md cursor-pointer" onClick={() => window.speechSynthesis.speak(new SpeechSynthesisUtterance(`want ${fav.text}`))}>{fav.text}</p>)}
+                    {favorites.filter(f => f.type === 'want').map(fav => <p key={fav.text} className="p-2 bg-secondary rounded-md cursor-pointer" onClick={() => window.speechSynthesis.speak(new SpeechSynthesisUtterance(`I want ${fav.text}`))}>{fav.text}</p>)}
                     {favorites.filter(f => f.type === 'need').length > 0 && <h4 className="font-semibold mt-2">Need</h4>}
-                    {favorites.filter(f => f.type === 'need').map(fav => <p key={fav.text} className="p-2 bg-secondary rounded-md cursor-pointer" onClick={() => window.speechSynthesis.speak(new SpeechSynthesisUtterance(`need ${fav.text}`))}>{fav.text}</p>)}
+                    {favorites.filter(f => f.type === 'need').map(fav => <p key={fav.text} className="p-2 bg-secondary rounded-md cursor-pointer" onClick={() => window.speechSynthesis.speak(new SpeechSynthesisUtterance(`I need ${fav.text}`))}>{fav.text}</p>)}
                     {favorites.filter(f => f.type === 'feel').length > 0 && <h4 className="font-semibold mt-2">Feel</h4>}
-                    {favorites.filter(f => f.type === 'feel').map(fav => <p key={fav.text} className="p-2 bg-secondary rounded-md cursor-pointer" onClick={() => window.speechSynthesis.speak(new SpeechSynthesisUtterance(`feel ${fav.text}`))}>{fav.text}</p>)}
+                    {favorites.filter(f => f.type === 'feel').map(fav => <p key={fav.text} className="p-2 bg-secondary rounded-md cursor-pointer" onClick={() => window.speechSynthesis.speak(new SpeechSynthesisUtterance(`I feel ${fav.text}`))}>{fav.text}</p>)}
                 </CardContent>
             </Card>
         </div>
