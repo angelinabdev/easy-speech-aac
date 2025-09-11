@@ -1,10 +1,3 @@
 {
-  "placeholderImages": [
-    {
-      "id": "logo",
-      "description": "Easy Speech AAC app logo",
-      "imageUrl": "https://storage.googleapis.com/aifire-us-sandbox-sample-images/easy-speech-aac-logo.png",
-      "imageHint": "communication puzzle"
-    }
-  ]
+  "placeholderImages": []
 }
