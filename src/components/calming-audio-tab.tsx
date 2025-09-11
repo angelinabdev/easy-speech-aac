@@ -4,24 +4,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 
 const audioTracks = [
     {
-        title: "Relaxing Music",
-        artist: "ZenLife",
-        url: "https://cdn.pixabay.com/audio/2022/10/18/audio_73b906236b.mp3",
-        uppbeatUrl: "https://pixabay.com/music/meditation-spiritual-relaxing-music-for-stress-relief-zen-yoga-meditation-123301/",
+        title: "Poco",
+        artist: "Roo Walker",
+        url: "https://cdn.pixabay.com/audio/2022/11/17/audio_82c678c049.mp3",
+        uppbeatUrl: "https://pixabay.com/music/solo-guitar-poco-125944/",
         license: "Pixabay License"
     },
     {
-        title: "Calm and Peaceful",
-        artist: "Lesfm",
-        url: "https://cdn.pixabay.com/audio/2023/10/02/audio_145d2a912e.mp3",
-        uppbeatUrl: "https://pixabay.com/music/beautiful-plays-calm-and-peaceful-169219/",
+        title: "Morning Garden",
+        artist: "Olexy",
+        url: "https://cdn.pixabay.com/audio/2023/10/23/audio_a734d5c90b.mp3",
+        uppbeatUrl: "https://pixabay.com/music/acoustic-group-morning-garden-acoustic-chill-173004/",
         license: "Pixabay License"
     },
      {
-        title: "Forest Sounds",
-        artist: "SoundsForYou",
-        url: "https://cdn.pixabay.com/audio/2022/08/04/audio_2bbe6a6a4c.mp3",
-        uppbeatUrl: "https://pixabay.com/sound-effects/forest-sound-114420/",
+        title: "Empty Mind",
+        artist: "Lofi-fi",
+        url: "https://cdn.pixabay.com/audio/2023/04/18/audio_27b2933068.mp3",
+        uppbeatUrl: "https://pixabay.com/music/lofi-empty-mind-145410/",
         license: "Pixabay License"
     }
 ];
@@ -42,7 +42,7 @@ export default function CalmingAudioTab() {
                         Your browser does not support the audio element.
                     </audio>
                     <p className="text-xs text-muted-foreground mt-2">
-                        Music from Pixabay. License: {track.license}
+                        Music from <a href={track.uppbeatUrl} target="_blank" rel="noopener noreferrer" className="underline">Pixabay</a>. License: {track.license}
                     </p>
                 </div>
             ))}
