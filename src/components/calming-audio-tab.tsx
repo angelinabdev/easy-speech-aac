@@ -4,17 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 
 const audioTracks = [
     {
-        title: "Gentle Ocean Waves",
-        artist: "Ambient Soundscapes",
-        url: "https://cdn.pixabay.com/audio/2022/02/04/audio_14cba46d46.mp3",
-        uppbeatUrl: "https://pixabay.com/sound-effects/gentle-ocean-waves-26569/",
+        title: "Poco",
+        artist: "Roo Walker",
+        url: "https://cdn.pixabay.com/audio/2022/11/11/audio_a7a4a91a92.mp3",
+        uppbeatUrl: "https://pixabay.com/music/unplugged-poco-125942/",
         license: "Pixabay License"
     },
     {
-        title: "Forest Walk",
-        artist: "Nature's Symphony",
-        url: "https://cdn.pixabay.com/audio/2022/04/04/audio_9242b65345.mp3",
-        uppbeatUrl: "https://pixabay.com/sound-effects/forest-walk-and-birds-singing-34399/",
+        title: "Winter Storm",
+        artist: "Brock Hewitt",
+        url: "https://cdn.pixabay.com/audio/2023/10/26/audio_a70a84aa24.mp3",
+        uppbeatUrl: "https://pixabay.com/music/ambient-winter-storm-173531/",
         license: "Pixabay License"
     },
      {
