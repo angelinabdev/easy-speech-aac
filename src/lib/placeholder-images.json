@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "logo",
-      "description": "EasySpeak app logo",
-      "imageUrl": "https://picsum.photos/seed/easyspeak-logo/140/140",
-      "imageHint": "communication icon"
+      "description": "Easy Speech AAC app logo",
+      "imageUrl": "https://storage.googleapis.com/aifire-us-sandbox-sample-images/easy-speech-aac-logo.png",
+      "imageHint": "communication puzzle"
     }
   ]
 }

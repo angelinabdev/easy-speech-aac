@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "EasySpeak",
+  title: "Easy Speech AAC",
   description: "Your friendly AAC and mood tracking companion.",
 };
 

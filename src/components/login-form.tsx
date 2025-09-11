@@ -28,7 +28,7 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center text-primary-foreground">Welcome to EasySpeak</CardTitle>
+          <CardTitle className="text-3xl font-bold text-center text-primary-foreground">Welcome to Easy Speech AAC</CardTitle>
           <CardDescription className="text-center text-muted-foreground">Please select your role to continue.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
