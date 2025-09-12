@@ -54,13 +54,7 @@ const suggestionFlow = ai.defineFlow(
     outputSchema: z.string(),
   },
   async (input) => {
-    // If likes are empty, provide a more generic prompt input for better suggestions.
-    const effectiveInput = {
-        ...input,
-        likes: input.likes.length > 0 ? input.likes : [],
-    };
-
-    const { output } = await prompt(effectiveInput);
+    const { output } = await prompt(input);
     return output!;
   }
 );
