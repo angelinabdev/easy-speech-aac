@@ -65,7 +65,7 @@ const PhraseList = ({
     switch (sort) {
         case 'za': result.sort((a,b) => b.text.localeCompare(a.text)); break;
         case 'usage': result.sort((a,b) => b.usageCount - a.usageCount); break;
-        default: result.sort((a,b) => a.text.localeCompare(b.text)); break;
+        default: result.sort((a,b) => a.text.localeCompare(a.text)); break;
     }
     return result;
   }, [phrases, sort, search]);
@@ -117,20 +117,8 @@ export default function PhrasesTab() {
   const [selectedVoice, setSelectedVoice] = useLocalStorage<string | undefined>('selected_voice_uri', undefined);
 
   useEffect(() => {
-    const voicesToExclude = [
-      'zarvox', 'wobble', 'whisper', 'trinoids', 'shelley', 'sandy', 'rocko',
-      'reed', 'ralph', 'organ', 'kathy', 'junior', 'karen', 'jester', 'grandpa',
-      'grandma', 'good news', 'flo', 'eddy', 'cellos', 'bubbles', 'boing',
-      'bells', 'bahh', 'bad news', 'albert'
-    ].map(v => v.toLowerCase());
-
     const loadVoices = () => {
       let availableVoices = window.speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en'));
-      
-      availableVoices = availableVoices.filter(voice => {
-        const voiceNameLower = voice.name.toLowerCase();
-        return !voicesToExclude.some(excludedName => voiceNameLower.includes(excludedName));
-      });
 
       if (availableVoices.length > 0) {
         setVoices(availableVoices);
