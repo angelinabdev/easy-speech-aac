@@ -34,8 +34,8 @@
     {
       "id": "house",
       "description": "House",
-      "imageUrl": "https://picsum.photos/seed/house/400/300",
-      "imageHint": "suburban house"
+      "imageUrl": "/images/house.png",
+      "imageHint": "white house"
     },
     {
       "id": "tree",
