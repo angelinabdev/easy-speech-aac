@@ -22,6 +22,15 @@ const MOODS = [
   { name: 'Tired', emoji: '😴', color: '#9ca3af' },
 ];
 
+const moodTips: { [key: string]: string } = {
+  Happy: "That's wonderful! Keep up the good work and continue what you are doing. Try something fun and relaxing that focuses on your special interests.",
+  Sad: "It's okay to feel sad. Try comforting activities, create a calm space, practice breathing exercises, or talk to someone you trust. Remember, you will be okay!",
+  Angry: "It's normal to feel angry. Calm yourself by identifying triggers, creating a predictable environment, counting to 10, or using breathing exercises. Find support if needed.",
+  Anxious: "Focus on your breath and stay in a calm, familiar setting. Use sensory objects or grounding techniques to help you feel more present and reduce stress.",
+  Calm: "Enjoy this moment. Do something relaxing and fun! Sensory objects and peaceful settings can help you recharge and maintain calm.",
+  Tired: "Take a well-deserved rest. Step away from the screen, have a short nap, or listen to calming music to refresh your mind."
+};
+
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
   const [likes] = useLocalStorage<ListItem[]>('about_me_likes', []);
@@ -43,7 +52,7 @@ export default function MoodTab() {
       setSuggestion(generatedSuggestion);
     } catch (error) {
       console.error("Failed to get suggestion:", error);
-      setSuggestion("Sorry, I couldn't think of a suggestion right now. Try a breathing exercise to calm your mind.");
+      setSuggestion(moodTips[mood] || "Take a moment for yourself. A few deep breaths can make a big difference.");
     } finally {
       setIsLoadingSuggestion(false);
     }
