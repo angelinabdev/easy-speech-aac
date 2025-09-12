@@ -23,6 +23,7 @@ import {
   sortableKeyboardCoordinates,
   useSortable,
   arrayMove,
+  horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
@@ -135,13 +136,13 @@ const getGameSet = (size = 4) => {
 };
 
 function PictureWordMatch() {
-  const [words, setWords] = useState<{id: string, text: string}[]>([]);
+  const [words, setWords] = useState<{id: string, text: string, category: string}[]>([]);
   const [images, setImages] = useState<{id: string, wordId: string, src: string, hint: string}[]>([]);
-  const [initialWords, setInitialWords] = useState<{id: string, text: string}[]>([]);
+  const [initialWords, setInitialWords] = useState<{id: string, text: string, category: string}[]>([]);
   
   const [matches, setMatches] = useState<Record<string, string | null>>({});
   const [feedback, setFeedback] = useState<Record<string, 'correct' | 'incorrect' | null>>({});
-  const [draggingWord, setDraggingWord] = useState<string | null>(null);
+  const [draggingWord, setDraggingWord] = useState<{id: string, text: string, category: string} | null>(null);
   const { toast } = useToast();
 
   const setupGame = useCallback(() => {
@@ -161,9 +162,17 @@ function PictureWordMatch() {
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
   }
+  
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const handleDragStart = (event: DragStartEvent) => {
-    setDraggingWord(event.active.id as string);
+    const { active } = event;
+    setDraggingWord(words.find(w => w.id === active.id) || null);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -181,7 +190,7 @@ function PictureWordMatch() {
 
       if (isCorrect) {
         speak('Great job!');
-        setWords(words.filter(w => w.id !== wordId));
+        setWords(currentWords => currentWords.filter(w => w.id !== wordId));
       } else {
         speak('Try again!');
         setTimeout(() => {
@@ -200,7 +209,7 @@ function PictureWordMatch() {
   const allCorrect = images.every(img => feedback[img.id] === 'correct') && images.length > 0;
 
   return (
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
       <Card>
         <CardHeader>
           <CardTitle>Picture-Word Matching</CardTitle>
@@ -229,9 +238,11 @@ function PictureWordMatch() {
           </div>
           
           <div className="min-h-[60px] bg-secondary p-4 rounded-lg flex items-center justify-center gap-4 flex-wrap">
-            {words.map(word => (
-              <WordDragItem key={word.id} id={word.id} text={word.text} />
-            ))}
+            <SortableContext items={words} strategy={horizontalListSortingStrategy}>
+              {words.map(word => (
+                <WordDragItem key={word.id} id={word.id} text={word.text} />
+              ))}
+            </SortableContext>
             {words.length === 0 && !allCorrect && <p className="text-muted-foreground">Match the remaining words!</p>}
             {words.length === 0 && allCorrect && <p className="text-muted-foreground">You did it!</p>}
           </div>
@@ -240,16 +251,17 @@ function PictureWordMatch() {
         </CardContent>
       </Card>
       <DragOverlay>
-        {draggingWord ? <div className="p-2 px-4 bg-accent text-accent-foreground rounded-lg shadow-lg cursor-grabbing">{initialWords.find(w => w.id === draggingWord)?.text}</div> : null}
+        {draggingWord ? <div className="p-2 px-4 bg-accent text-accent-foreground rounded-lg shadow-lg cursor-grabbing">{draggingWord.text}</div> : null}
       </DragOverlay>
     </DndContext>
   );
 }
 
 function WordDragItem({ id, text }: { id: string; text: string }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({ id, data: { type: 'word' } });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
   const style = { 
     transform: CSS.Transform.toString(transform),
+    transition,
     opacity: isDragging ? 0.5 : 1,
    };
   return (
