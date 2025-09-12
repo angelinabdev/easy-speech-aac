@@ -5,24 +5,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 const audioTracks = [
     {
         title: "Peaceful Mind",
-        artist: "Zakhar Valaha",
-        url: "https://assets.mixkit.co/music/preview/mixkit-peaceful-mind-1165.mp3",
-        sourceUrl: "https://mixkit.co/free-stock-music/ambient/",
-        license: "Mixkit License"
+        artist: "Ars Sonor",
+        url: "https://archive.org/download/PeacefulMind/PeacefulMind.mp3",
+        sourceUrl: "https://archive.org/details/PeacefulMind",
+        license: "Public Domain"
     },
     {
-        title: "Sleepy Cat",
-        artist: "Alejandro Magaña",
-        url: "https://assets.mixkit.co/music/preview/mixkit-sleepy-cat-135.mp3",
-        sourceUrl: "https://mixkit.co/free-stock-music/ambient/",
-        license: "Mixkit License"
+        title: "Relaxing Green Nature",
+        artist: "gdsounds",
+        url: "https://archive.org/download/RelaxingGreenNature/RelaxingGreenNature.mp3",
+        sourceUrl: "https://archive.org/details/RelaxingGreenNature",
+        license: "Public Domain"
     },
      {
-        title: "Just Chill",
-        artist: "Ahjay Stelino",
-        url: "https://assets.mixkit.co/music/preview/mixkit-just-chill-16.mp3",
-        sourceUrl: "https://mixkit.co/free-stock-music/ambient/",
-        license: "Mixkit License"
+        title: "Calm and Peaceful",
+        artist: "Lesfm",
+        url: "https://archive.org/download/Calm-and-Peaceful/Calm%20and%20Peaceful.mp3",
+        sourceUrl: "https://archive.org/details/Calm-and-Peaceful",
+        license: "Public Domain"
     }
 ];
 
@@ -42,7 +42,7 @@ export default function CalmingAudioTab() {
                         Your browser does not support the audio element.
                     </audio>
                     <p className="text-xs text-muted-foreground mt-2">
-                        Music from <a href={track.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">Mixkit</a>. License: <strong>{track.license}</strong>
+                        Music from <a href={track.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">The Internet Archive</a>. License: <strong>{track.license}</strong>
                     </p>
                 </div>
             ))}
