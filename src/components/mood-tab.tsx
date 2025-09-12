@@ -84,88 +84,86 @@ export default function MoodTab() {
   const currentTip = activeMood ? moodTips[activeMood] : null;
 
   return (
-    <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-2 space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Mood Tracker</CardTitle>
-                    <CardDescription>Tap your current mood to log it and get personalized tips.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-wrap gap-2">
-                    {MOODS.map(mood => (
-                        <Button key={mood.name} onClick={() => handleMoodSelect(mood.name)} variant="outline" className="p-4 h-auto text-lg flex-grow">
-                            <span className="text-2xl mr-2">{mood.emoji}</span> {mood.name}
-                        </Button>
-                    ))}
-                </CardContent>
-            </Card>
-            {currentTip && activeMood && (
-                <Alert>
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
-                    <AlertDescription className="space-y-2 mt-2">
-                        <p>{currentTip}</p>
-                    </AlertDescription>
-                </Alert>
-            )}
-             {!currentTip && (
-                <Alert>
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertTitle>Mood Tips</AlertTitle>
-                    <AlertDescription className="space-y-2 mt-2">
-                        <p>Select a mood to get a tip.</p>
-                    </AlertDescription>
-                </Alert>
-            )}
-        </div>
+    <div className="grid gap-6 md:grid-cols-1">
+        <Card>
+            <CardHeader>
+                <CardTitle>Mood Tracker</CardTitle>
+                <CardDescription>Tap your current mood to log it and get personalized tips.</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+                {MOODS.map(mood => (
+                    <Button key={mood.name} onClick={() => handleMoodSelect(mood.name)} variant="outline" className="p-4 h-auto text-lg flex-grow">
+                        <span className="text-2xl mr-2">{mood.emoji}</span> {mood.name}
+                    </Button>
+                ))}
+            </CardContent>
+        </Card>
 
-        <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Mood Analytics</CardTitle>
-                </CardHeader>
-                <CardContent className="h-[200px]" ref={chartRef}>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="name" />
-                            <YAxis allowDecimals={false} />
-                            <Tooltip />
-                            <Bar dataKey="count">
-                                {chartData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                ))}
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <div className="flex justify-between items-center">
-                        <CardTitle>Mood History</CardTitle>
-                         <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" onClick={printMoodData}>
-                                <Printer className="h-4 w-4 mr-1"/> Print
-                            </Button>
-                            <Button variant="destructive" size="sm" onClick={() => setMoodHistory([])}>
-                                <Trash2 className="h-4 w-4 mr-1"/> Clear All
-                            </Button>
-                        </div>
+        <Card>
+            <CardHeader>
+                <CardTitle>Mood Analytics</CardTitle>
+            </CardHeader>
+            <CardContent className="h-[250px]" ref={chartRef}>
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis allowDecimals={false} />
+                        <Tooltip />
+                        <Bar dataKey="count">
+                            {chartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </CardContent>
+        </Card>
+
+        <Card>
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle>Mood History</CardTitle>
+                     <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" onClick={printMoodData}>
+                            <Printer className="h-4 w-4 mr-1"/> Print
+                        </Button>
+                        <Button variant="destructive" size="sm" onClick={() => setMoodHistory([])}>
+                            <Trash2 className="h-4 w-4 mr-1"/> Clear All
+                        </Button>
                     </div>
-                </CardHeader>
-                <CardContent className="max-h-60 overflow-y-auto space-y-2 pr-2">
-                    {moodHistory.length > 0 ? moodHistory.map((entry) => (
-                        <div key={entry.id} className="group text-sm text-muted-foreground p-2 bg-secondary rounded-md flex justify-between items-center">
-                           <span>{entry.timestamp}: <span className="font-semibold text-foreground">{entry.mood}</span></span>
-                           <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={() => deleteMoodEntry(entry.id)}>
-                               <Trash2 className="h-4 w-4 text-destructive"/>
-                           </Button>
-                        </div>
-                    )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
-                </CardContent>
-            </Card>
-        </div>
+                </div>
+            </CardHeader>
+            <CardContent className="max-h-60 overflow-y-auto space-y-2 pr-2">
+                {moodHistory.length > 0 ? moodHistory.map((entry) => (
+                    <div key={entry.id} className="group text-sm text-muted-foreground p-2 bg-secondary rounded-md flex justify-between items-center">
+                       <span>{entry.timestamp}: <span className="font-semibold text-foreground">{entry.mood}</span></span>
+                       <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={() => deleteMoodEntry(entry.id)}>
+                           <Trash2 className="h-4 w-4 text-destructive"/>
+                       </Button>
+                    </div>
+                )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
+            </CardContent>
+        </Card>
+
+        {currentTip && activeMood && (
+            <Alert>
+                <Lightbulb className="h-4 w-4" />
+                <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
+                <AlertDescription className="space-y-2 mt-2">
+                    <p>{currentTip}</p>
+                </AlertDescription>
+            </Alert>
+        )}
+         {!currentTip && (
+            <Alert>
+                <Lightbulb className="h-4 w-4" />
+                <AlertTitle>Mood Tips</AlertTitle>
+                <AlertDescription className="space-y-2 mt-2">
+                    <p>Select a mood to get a tip.</p>
+                </AlertDescription>
+            </Alert>
+        )}
     </div>
   );
 }
