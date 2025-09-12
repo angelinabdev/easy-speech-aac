@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
@@ -33,6 +33,7 @@ const moodTips: Record<string, string> = {
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
   const [activeMood, setActiveMood] = useState<string | null>(null);
+  const chartRef = useRef(null);
 
   const handleMoodSelect = async (mood: string) => {
     const newEntry: MoodEntry = { mood, timestamp: new Date().toLocaleString(), id: Date.now().toString() };
@@ -52,14 +53,28 @@ export default function MoodTab() {
 
   const currentTip = activeMood ? moodTips[activeMood] : null;
 
-  const printMoodData = () => {
+  const printMoodData = async () => {
     const printWindow = window.open('', '', 'height=600,width=800');
     if (printWindow) {
       printWindow.document.write('<html><head><title>Mood Report</title>');
-      printWindow.document.write('<style>body{font-family: sans-serif;} h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px;} .entry { margin-bottom: 5px; } .analytics-item { display: flex; justify-content: space-between; max-width: 200px; }</style></head><body>');
+      printWindow.document.write('<style>body{font-family: sans-serif;} h1, h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px;} .entry { margin-bottom: 5px; } img { max-width: 100%; height: auto; margin-top: 1rem; } </style></head><body>');
       printWindow.document.write(`<h1>Mood Report - ${new Date().toLocaleDateString()}</h1>`);
       
-      printWindow.document.write('<h2>Mood History</h2>');
+      printWindow.document.write('<h2>Mood Analytics</h2>');
+      
+      try {
+        const { default: html2canvas } = await import('html2canvas');
+        if (chartRef.current) {
+            const canvas = await html2canvas(chartRef.current, { backgroundColor: null });
+            const imgData = canvas.toDataURL('image/png');
+            printWindow.document.write('<img src="' + imgData + '" />');
+        }
+      } catch (e) {
+          console.error("Could not print chart:", e);
+          printWindow.document.write('<p>Chart could not be rendered for printing.</p>');
+      }
+
+      printWindow.document.write('<br/><h2>Mood History</h2>');
       if (moodHistory.length > 0) {
         moodHistory.forEach(entry => {
           printWindow.document.write(`<div class="entry"><strong>${entry.timestamp}:</strong> ${entry.mood}</div>`);
@@ -67,16 +82,7 @@ export default function MoodTab() {
       } else {
         printWindow.document.write('<p>No history recorded.</p>');
       }
-
-      printWindow.document.write('<br/><h2>Mood Analytics</h2>');
-      if (chartData.some(d => d.count > 0)) {
-        chartData.filter(d => d.count > 0).forEach(data => {
-            printWindow.document.write(`<div class="analytics-item"><span>${data.name}:</span> <span>${data.count}</span></div>`);
-        });
-      } else {
-          printWindow.document.write('<p>No analytics data available.</p>');
-      }
-
+      
       printWindow.document.write('</body></html>');
       printWindow.document.close();
       printWindow.print();
@@ -100,9 +106,30 @@ export default function MoodTab() {
                 </CardContent>
             </Card>
 
+            {currentTip && activeMood && (
+                <Alert>
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
+                    <AlertDescription className="space-y-2 mt-2">
+                        <p>{currentTip}</p>
+                    </AlertDescription>
+                </Alert>
+            )}
+             {!currentTip && (
+                <Alert>
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertTitle>Mood Tips</AlertTitle>
+                    <AlertDescription className="space-y-2 mt-2">
+                        <p>Select a mood to get a tip.</p>
+                    </AlertDescription>
+                </Alert>
+            )}
+        </div>
+
+        <div className="space-y-6">
             <Card>
                 <CardHeader><CardTitle>Mood Analytics</CardTitle></CardHeader>
-                <CardContent className="h-[300px]">
+                <CardContent className="h-[300px]" ref={chartRef}>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -118,9 +145,6 @@ export default function MoodTab() {
                     </ResponsiveContainer>
                 </CardContent>
             </Card>
-        </div>
-
-        <div className="space-y-6">
             <Card>
                 <CardHeader>
                     <div className="flex justify-between items-center">
@@ -144,24 +168,6 @@ export default function MoodTab() {
                            </Button>
                         </div>
                     )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
-                </CardContent>
-            </Card>
-            
-            <Card className="min-h-[180px]">
-                <CardHeader><CardTitle>Mood Tips</CardTitle></CardHeader>
-                <CardContent>
-                    {currentTip && activeMood && (
-                        <Alert>
-                            <Lightbulb className="h-4 w-4" />
-                            <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
-                            <AlertDescription className="space-y-2 mt-2">
-                                <p>{currentTip}</p>
-                            </AlertDescription>
-                        </Alert>
-                    )}
-                    {!currentTip && (
-                       <p className="text-muted-foreground">Select a mood to get a tip.</p>
-                    )}
                 </CardContent>
             </Card>
         </div>
