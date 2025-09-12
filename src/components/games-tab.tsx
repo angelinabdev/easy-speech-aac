@@ -119,24 +119,27 @@ function SentenceBuilderGame() {
         const inWordBank = wordBank.includes(activeId);
         const inSentenceBox = sentenceBox.includes(activeId);
     
-        if (over.data.current?.id === 'sentence-box-container') {
-            if (inWordBank) {
-                setSentenceBox((prev) => [...prev, activeId]);
-                setWordBank((prev) => prev.filter((id) => id !== activeId));
-            }
-        } else if (over.data.current?.id === 'word-bank-container') {
-            if (inSentenceBox) {
-                setWordBank((prev) => [...prev, activeId]);
-                setSentenceBox((prev) => prev.filter((id) => id !== activeId));
-            }
-        } else {
-            if (inSentenceBox && sentenceBox.includes(overId)) {
-                setSentenceBox((items) => {
-                    const oldIndex = items.indexOf(activeId);
-                    const newIndex = items.indexOf(overId);
-                    return arrayMove(items, oldIndex, newIndex);
-                });
-            }
+        // Moving from Word Bank to Sentence Box
+        if (over.id === 'sentence-box-container' && inWordBank) {
+            setSentenceBox((prev) => [...prev, activeId]);
+            setWordBank((prev) => prev.filter((id) => id !== activeId));
+            return;
+        }
+
+        // Moving from Sentence Box to Word Bank
+        if (over.id === 'word-bank-container' && inSentenceBox) {
+            setWordBank((prev) => [...prev, activeId]);
+            setSentenceBox((prev) => prev.filter((id) => id !== activeId));
+            return;
+        }
+
+        // Reordering within Sentence Box
+        if (inSentenceBox && overId && sentenceBox.includes(overId)) {
+             setSentenceBox((items) => {
+                const oldIndex = items.indexOf(activeId);
+                const newIndex = items.indexOf(overId);
+                return arrayMove(items, oldIndex, newIndex);
+            });
         }
     };
     
@@ -162,7 +165,6 @@ function SentenceBuilderGame() {
                 <SortableContext items={sentenceBox}>
                     <div 
                       id="sentence-box-container"
-                      data-id="sentence-box-container"
                       className="p-4 border-2 border-dashed rounded-lg min-h-[100px] flex items-center justify-center gap-2 flex-wrap bg-background/50"
                     >
                         {sentenceBox.map(word => (
@@ -176,7 +178,6 @@ function SentenceBuilderGame() {
                 <SortableContext items={wordBank}>
                     <div 
                       id="word-bank-container" 
-                      data-id="word-bank-container"
                       className="p-4 bg-secondary rounded-lg min-h-[100px] flex items-center justify-center gap-2 flex-wrap"
                     >
                          {wordBank.map(word => (
