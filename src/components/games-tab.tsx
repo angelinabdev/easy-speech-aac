@@ -391,7 +391,8 @@ function PictureWordMatchGame({ onGameComplete }: { onGameComplete: () => void }
                     <Image 
                         src={round.image.imageUrl} 
                         alt={round.image.description} 
-                        fill 
+                        fill
+                        unoptimized
                         className="object-cover" 
                         data-ai-hint={round.image.imageHint}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
