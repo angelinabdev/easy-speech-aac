@@ -4,17 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 
 const audioTracks = [
     {
-        title: "Poco",
-        artist: "Roo Walker",
-        url: "https://cdn.pixabay.com/audio/2022/11/17/audio_82c678c049.mp3",
-        uppbeatUrl: "https://pixabay.com/music/solo-guitar-poco-125944/",
+        title: "Just Relax",
+        artist: "Lesfm",
+        url: "https://cdn.pixabay.com/audio/2022/05/18/audio_d07a16d552.mp3",
+        uppbeatUrl: "https://pixabay.com/music/beautiful-plays-just-relax-11157/",
         license: "Pixabay License"
     },
     {
-        title: "Morning Garden",
-        artist: "Olexy",
-        url: "https://cdn.pixabay.com/audio/2023/10/23/audio_a734d5c90b.mp3",
-        uppbeatUrl: "https://pixabay.com/music/acoustic-group-morning-garden-acoustic-chill-173004/",
+        title: "The Cradle of Your Soul",
+        artist: "lemonmusicstudio",
+        url: "https://cdn.pixabay.com/audio/2022/11/17/audio_8ac9303495.mp3",
+        uppbeatUrl: "https://pixabay.com/music/meditation-spiritual-the-cradle-of-your-soul-125718/",
         license: "Pixabay License"
     },
      {
