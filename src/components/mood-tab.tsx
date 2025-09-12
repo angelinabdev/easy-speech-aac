@@ -8,6 +8,8 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Loader2, Trash2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Lightbulb } from 'lucide-react';
+import type { MoodActivitySuggestion } from '@/ai/flows/suggest-mood-activities';
+import { getMoodSuggestions } from '@/app/actions';
 
 type MoodEntry = { mood: string; timestamp: string, id: string };
 
@@ -20,30 +22,34 @@ const MOODS = [
   { name: 'Tired', emoji: '😴', color: '#9ca3af' },
 ];
 
-const moodTips: { [key: string]: string } = {
-  Happy: "That's wonderful! Keep up the good work and continue what you are doing. Try something fun and relaxing that focuses on your special interests.",
-  Sad: "It's okay to feel sad. Try comforting activities, create a calm space, practice breathing exercises, or talk to someone you trust. Remember, you will be okay!",
-  Angry: "It's normal to feel angry. Calm yourself by identifying triggers, creating a predictable environment, counting to 10, or using breathing exercises. Find support if needed.",
-  Anxious: "Focus on your breath and stay in a calm, familiar setting. Use sensory objects or grounding techniques to help you feel more present and reduce stress.",
-  Calm: "Enjoy this peaceful moment. Do something relaxing and fun! Sensory objects can help you recharge and maintain calm.",
-  Tired: "Take a well-deserved rest. Step away from the screen, have a short nap, or listen to calming music to refresh your mind."
-};
-
-
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
   const [activeMood, setActiveMood] = useState<string | null>(null);
+  const [suggestions, setSuggestions] = useState<MoodActivitySuggestion | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleMoodSelect = async (mood: string) => {
     const newEntry: MoodEntry = { mood, timestamp: new Date().toLocaleString(), id: Date.now().toString() };
     setMoodHistory([newEntry, ...moodHistory].slice(0, 20));
     setActiveMood(mood);
+    setIsLoading(true);
+    setError(null);
+    setSuggestions(null);
+
+    const result = await getMoodSuggestions(mood);
+
+    if (result.success && result.data) {
+      setSuggestions(result.data);
+    } else {
+      setError(result.error || "An unknown error occurred.");
+    }
+    setIsLoading(false);
   };
   
   const deleteMoodEntry = (id: string) => {
     setMoodHistory(moodHistory.filter(entry => entry.id !== id));
   };
-
 
   const chartData = MOODS.map(mood => ({
     name: mood.name,
@@ -111,18 +117,31 @@ export default function MoodTab() {
             </Card>
             
             <Card className="min-h-[180px]">
-                <CardHeader><CardTitle>Mood Tips</CardTitle></CardHeader>
+                <CardHeader><CardTitle>AI Mood Tips</CardTitle></CardHeader>
                 <CardContent>
-                    {activeMood && moodTips[activeMood] ? (
+                    {isLoading && (
+                        <div className="flex items-center justify-center h-full">
+                            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                        </div>
+                    )}
+                    {error && (
+                        <Alert variant="destructive">
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+                    {suggestions && (
                         <Alert>
                             <Lightbulb className="h-4 w-4" />
-                            <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
+                            <AlertTitle>Suggestions for feeling {activeMood}</AlertTitle>
                             <AlertDescription className="space-y-2 mt-2">
-                                <p>{moodTips[activeMood]}</p>
+                                <p><strong>Activity:</strong> {suggestions.activity}</p>
+                                <p><strong>Calming Audio:</strong> {suggestions.audioSuggestion}</p>
                             </AlertDescription>
                         </Alert>
-                    ) : (
-                       <p className="text-muted-foreground">Select a mood to get a tip.</p>
+                    )}
+                    {!isLoading && !error && !suggestions && (
+                       <p className="text-muted-foreground">Select a mood to get a tip from the AI.</p>
                     )}
                 </CardContent>
             </Card>

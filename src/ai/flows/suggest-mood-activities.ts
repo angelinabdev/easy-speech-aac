@@ -28,10 +28,20 @@ export async function suggestMoodActivities(mood: MoodInput): Promise<MoodActivi
 
 const suggestMoodActivitiesPrompt = ai.definePrompt({
   name: 'suggestMoodActivitiesPrompt',
-  input: {schema: MoodInputSchema},
+  input: {schema: z.string()},
   output: {schema: MoodActivitySuggestionSchema},
-  prompt: `Based on the user's mood: {{{mood}}}, suggest one activity and one calming audio to improve their well-being.\n\nActivity: // Suggest an activity related to improving the user's mood
-Calming Audio: //Suggest a calming audio to improve mood.`,
+  prompt: `Based on the user's mood: {{mood}}, suggest one activity and one calming audio to improve their well-being. Be creative and empathetic.
+
+Example for Sad:
+Activity: "Drawing a picture of something that makes you happy."
+Audio Suggestion: "The sound of gentle rain."
+
+Example for Anxious:
+Activity: "Counting five things you can see and four things you can touch."
+Audio Suggestion: "A slow, calming heartbeat sound."
+
+User's mood is: {{mood}}
+`,
 });
 
 const suggestMoodActivitiesFlow = ai.defineFlow(
