@@ -4,25 +4,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 
 const audioTracks = [
     {
-        title: "Peaceful Mind",
-        artist: "Ars Sonor",
-        url: "https://archive.org/download/PeacefulMind/PeacefulMind.mp3",
-        sourceUrl: "https://archive.org/details/PeacefulMind",
-        license: "Public Domain"
+        title: "Calm Sea",
+        artist: "InSintesi",
+        url: "https://cdn.freesound.org/previews/570/570576_7306235-hq.mp3",
+        sourceUrl: "https://freesound.org/people/InSintesi/sounds/570576/",
+        license: "CC0 1.0"
     },
     {
-        title: "Relaxing Green Nature",
-        artist: "gdsounds",
-        url: "https://archive.org/download/RelaxingGreenNature/RelaxingGreenNature.mp3",
-        sourceUrl: "https://archive.org/details/RelaxingGreenNature",
-        license: "Public Domain"
+        title: "Peaceful Garden",
+        artist: "soundmary",
+        url: "https://cdn.freesound.org/previews/613/613205_11861999-hq.mp3",
+        sourceUrl: "https://freesound.org/people/soundmary/sounds/613205/",
+        license: "CC BY 4.0"
     },
      {
-        title: "Calm and Peaceful",
-        artist: "Lesfm",
-        url: "https://archive.org/download/Calm-and-Peaceful/Calm%20and%20Peaceful.mp3",
-        sourceUrl: "https://archive.org/details/Calm-and-Peaceful",
-        license: "Public Domain"
+        title: "Soothing White Noise",
+        artist: "qubodup",
+        url: "https://cdn.freesound.org/previews/122/122176_1015240-hq.mp3",
+        sourceUrl: "https://freesound.org/people/qubodup/sounds/122176/",
+        license: "CC0 1.0"
     }
 ];
 
@@ -42,7 +42,7 @@ export default function CalmingAudioTab() {
                         Your browser does not support the audio element.
                     </audio>
                     <p className="text-xs text-muted-foreground mt-2">
-                        Music from <a href={track.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">The Internet Archive</a>. License: <strong>{track.license}</strong>
+                        Music from <a href={track.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">Freesound.org</a>. License: <strong>{track.license}</strong>
                     </p>
                 </div>
             ))}
