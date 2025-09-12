@@ -33,9 +33,9 @@ export default function AppHeader({ onLogout, onHelpClick }: AppHeaderProps) {
             />
             <Moon className="h-5 w-5" />
           </div>
-          <Button variant="ghost" size="icon" onClick={onHelpClick}>
-            <HelpCircle className="h-5 w-5" />
-            <span className="sr-only">Help</span>
+          <Button variant="outline" size="sm" onClick={onHelpClick}>
+            <HelpCircle className="mr-2 h-4 w-4" />
+            Help
           </Button>
           <Button variant="outline" size="sm" onClick={onLogout}>
             <LogOut className="mr-2 h-4 w-4" />
