@@ -51,8 +51,8 @@
     {
       "id": "book",
       "description": "Book",
-      "imageUrl": "https://picsum.photos/seed/book/400/300",
-      "imageHint": "open book"
+      "imageUrl": "/images/book.png",
+      "imageHint": "stack books"
     },
     {
       "id": "chair",
