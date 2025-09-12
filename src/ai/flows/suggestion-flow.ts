@@ -18,10 +18,11 @@ const SuggestionInputSchema = z.object({
 export type SuggestionInput = z.infer<typeof SuggestionInputSchema>;
 
 export async function getSuggestion(input: SuggestionInput): Promise<string> {
-  return suggestionFlow(input);
+  const { output } = await suggestionPrompt(input);
+  return output!;
 }
 
-const prompt = ai.definePrompt({
+const suggestionPrompt = ai.definePrompt({
   name: 'suggestionPrompt',
   input: { schema: SuggestionInputSchema },
   output: { schema: z.string() },
@@ -59,15 +60,3 @@ Guidelines:
 - If no specific likes are provided, give a general but kind suggestion appropriate for the {{mood}}.
 `,
 });
-
-const suggestionFlow = ai.defineFlow(
-  {
-    name: 'suggestionFlow',
-    inputSchema: SuggestionInputSchema,
-    outputSchema: z.string(),
-  },
-  async (input) => {
-    const { output } = await prompt(input);
-    return output!;
-  }
-);
