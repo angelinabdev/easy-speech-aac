@@ -1,3 +1,4 @@
+
 {
   "placeholderImages": [
     {
@@ -15,8 +16,8 @@
     {
       "id": "car",
       "description": "Car",
-      "imageUrl": "https://picsum.photos/seed/car/400/300",
-      "imageHint": "red car"
+      "imageUrl": "/images/car.png",
+      "imageHint": "orange car"
     },
     {
       "id": "dog",
