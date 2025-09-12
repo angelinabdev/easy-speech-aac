@@ -120,29 +120,18 @@ function SentenceBuilderGame() {
         const inSentenceBox = sentenceBox.includes(activeId);
     
         if (over.data.current?.id === 'sentence-box-container') {
-            // Dragging from word bank to sentence box
             if (inWordBank) {
                 setSentenceBox((prev) => [...prev, activeId]);
                 setWordBank((prev) => prev.filter((id) => id !== activeId));
             }
         } else if (over.data.current?.id === 'word-bank-container') {
-            // Dragging from sentence box to word bank
             if (inSentenceBox) {
                 setWordBank((prev) => [...prev, activeId]);
                 setSentenceBox((prev) => prev.filter((id) => id !== activeId));
             }
         } else {
-            // Reordering within sentence box
             if (inSentenceBox && sentenceBox.includes(overId)) {
                 setSentenceBox((items) => {
-                    const oldIndex = items.indexOf(activeId);
-                    const newIndex = items.indexOf(overId);
-                    return arrayMove(items, oldIndex, newIndex);
-                });
-            }
-            // Reordering within word bank (optional, but good to have)
-            if (inWordBank && wordBank.includes(overId)) {
-                setWordBank((items) => {
                     const oldIndex = items.indexOf(activeId);
                     const newIndex = items.indexOf(overId);
                     return arrayMove(items, oldIndex, newIndex);
@@ -176,15 +165,11 @@ function SentenceBuilderGame() {
                       data-id="sentence-box-container"
                       className="p-4 border-2 border-dashed rounded-lg min-h-[100px] flex items-center justify-center gap-2 flex-wrap bg-background/50"
                     >
-                        {sentenceBox.length > 0 ? (
-                           sentenceBox.map(word => (
-                            <SortableItem key={word} id={word}>
-                                <div className="p-2 px-4 bg-primary text-primary-foreground rounded-lg shadow cursor-grab">{word}</div>
-                            </SortableItem>
-                           ))
-                        ) : (
-                             <p className="text-muted-foreground">Drop words here to build a sentence.</p>
-                        )}
+                        {sentenceBox.map(word => (
+                        <SortableItem key={word} id={word}>
+                            <div className="p-2 px-4 bg-primary text-primary-foreground rounded-lg shadow cursor-grab">{word}</div>
+                        </SortableItem>
+                        ))}
                     </div>
                 </SortableContext>
                 
