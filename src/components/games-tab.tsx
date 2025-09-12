@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -25,9 +25,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Info, Award, CheckCircle, XCircle } from 'lucide-react';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Info, Award } from 'lucide-react';
 
 // --- SENTENCE BUILDER GAME ---
 
@@ -140,25 +138,20 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
         }
     }, [isInitialLoad, setShuffledSentences]);
 
-    const loadSentence = useCallback((index: number) => {
+    useEffect(() => {
         if (shuffledSentences.length > 0) {
-            if (index >= shuffledSentences.length) {
+            if (currentSentenceIndex >= shuffledSentences.length) {
                 onGameComplete();
+                // Reset for the next playthrough
                 setCurrentSentenceIndex(0);
                 setShuffledSentences(shuffleArray(SENTENCES));
-                // The game will reload with the first sentence of the new shuffled list
-                return;
+            } else {
+                const sentenceDef = shuffledSentences[currentSentenceIndex];
+                setItems(shuffleArray(sentenceDef.words).map((word, i) => ({ id: `${word}_${i}`, text: word })));
+                setFeedback(null);
             }
-            const sentenceDef = shuffledSentences[index];
-            setItems(shuffleArray(sentenceDef.words).map((word, i) => ({ id: `${word}_${i}`, text: word })));
-            setFeedback(null);
         }
-    }, [shuffledSentences, onGameComplete, setCurrentSentenceIndex, setShuffledSentences]);
-
-    useEffect(() => {
-        loadSentence(currentSentenceIndex);
-    }, [loadSentence, currentSentenceIndex]);
-
+    }, [shuffledSentences, currentSentenceIndex, onGameComplete, setCurrentSentenceIndex, setShuffledSentences]);
 
     const currentSentenceDef = shuffledSentences[currentSentenceIndex];
     
@@ -185,16 +178,10 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
             setFeedback('correct');
             setPoints(points + 20);
             
-            const nextIndex = currentSentenceIndex + 1;
-            if (nextIndex >= shuffledSentences.length) {
-                onGameComplete();
-                setCurrentSentenceIndex(0);
-                setShuffledSentences(shuffleArray(SENTENCES)); 
-            } else {
-                 setTimeout(() => {
-                    setCurrentSentenceIndex(nextIndex);
-                }, 1500);
-            }
+            setTimeout(() => {
+                setCurrentSentenceIndex(currentSentenceIndex + 1);
+            }, 1500);
+
         } else {
             setFeedback('incorrect');
             setPoints(Math.max(0, points - 10));
@@ -297,190 +284,13 @@ function SentenceBuilder() {
   );
 }
 
-// --- PICTURE WORD MATCH GAME ---
-
-const generateRound = (items: typeof PlaceHolderImages) => {
-    const shuffledItems = shuffleArray(items);
-    const correctItem = shuffledItems[0];
-    const incorrectWords = shuffleArray(items.filter(item => item.id !== correctItem.id)).slice(0, 3).map(item => item.description);
-    const options = shuffleArray([correctItem.description, ...incorrectWords]);
-    return {
-        image: correctItem,
-        options,
-        correctAnswer: correctItem.description,
-    };
-};
-
-function PictureWordMatchGame({ onGameComplete }: { onGameComplete: () => void }) {
-    const [points, setPoints] = useLocalStorage('planner_points', 0);
-    const [level, setLevel] = useLocalStorage('planner_level', 1);
-
-    const [shuffledItems] = useState(() => shuffleArray(PlaceHolderImages));
-    const [currentItemIndex, setCurrentItemIndex] = useState(0);
-
-    const [round, setRound] = useState(() => generateRound(shuffledItems));
-    const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
-    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-
-    const loadNextRound = () => {
-        const nextIndex = currentItemIndex + 1;
-        if (nextIndex >= shuffledItems.length) {
-            onGameComplete();
-            setCurrentItemIndex(0); // Reset for next game session
-        } else {
-            setCurrentItemIndex(nextIndex);
-        }
-        setRound(generateRound(shuffledItems.slice(nextIndex)));
-        setFeedback(null);
-        setSelectedAnswer(null);
-    };
-
-    const handleAnswer = (answer: string) => {
-        if (feedback) return; // Don't allow changing answer after feedback
-
-        setSelectedAnswer(answer);
-        if (answer === round.correctAnswer) {
-            setFeedback('correct');
-            setPoints(p => p + 15);
-            setTimeout(loadNextRound, 1500);
-        } else {
-            setFeedback('incorrect');
-            setPoints(p => Math.max(0, p - 5));
-        }
-    };
-    
-    const expForNextLevel = level * 100;
-    const currentExp = points - ((level - 1) * 100);
-    const progress = Math.min(100, (currentExp / expForNextLevel) * 100);
-    
-    useEffect(() => {
-        if (points >= expForNextLevel) {
-            setLevel(level + 1);
-        }
-    }, [points, level, expForNextLevel, setLevel]);
-
-
-    if (PlaceHolderImages.length < 4) {
-        return <p>Not enough images to play the game. Please add at least 4 images.</p>;
-    }
-    
-    return (
-        <div className="space-y-4">
-             <Card>
-                <CardHeader><CardTitle>🏆 My Progress</CardTitle></CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="text-center">
-                        <Badge variant="outline" className="text-lg">Level {level}</Badge>
-                        <p className="text-2xl font-bold mt-2">{points} Points</p>
-                    </div>
-                    <div>
-                        <div className="flex justify-between text-sm text-muted-foreground mb-1">
-                            <span>Progress to Level {level+1}</span>
-                            <span>{currentExp} / {expForNextLevel} EXP</span>
-                        </div>
-                        <Progress value={progress} />
-                    </div>
-                </CardContent>
-            </Card>
-            <div className="text-center text-muted-foreground font-semibold">
-                Images Matched: {currentItemIndex} / {shuffledItems.length}
-            </div>
-
-            <Card className="overflow-hidden">
-                <div className="relative w-full aspect-video">
-                    <Image 
-                        src={round.image.imageUrl} 
-                        alt={round.image.description} 
-                        fill
-                        unoptimized
-                        className="object-cover" 
-                        data-ai-hint={round.image.imageHint}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                </div>
-            </Card>
-
-            <div className="grid grid-cols-2 gap-4">
-                {round.options.map(option => {
-                    const isCorrect = option === round.correctAnswer;
-                    const isSelected = option === selectedAnswer;
-                    let variant: "default" | "secondary" | "destructive" = "secondary";
-                    if (isSelected) {
-                        variant = isCorrect ? "default" : "destructive";
-                    }
-                    
-                    return (
-                        <Button 
-                            key={option} 
-                            onClick={() => handleAnswer(option)}
-                            variant={variant}
-                            className={`h-16 text-lg relative ${isSelected && isCorrect && 'bg-green-500 hover:bg-green-600'} ${isSelected && !isCorrect && 'bg-red-500 hover:bg-red-600'}`}
-                            disabled={!!feedback}
-                        >
-                            {option}
-                            {isSelected && isCorrect && <CheckCircle className="absolute right-2 top-2 h-5 w-5"/>}
-                            {isSelected && !isCorrect && <XCircle className="absolute right-2 top-2 h-5 w-5"/>}
-                        </Button>
-                    );
-                })}
-            </div>
-
-             {feedback && (
-                  <Alert variant={feedback === 'correct' ? 'default' : 'destructive'} className={feedback === 'correct' ? 'bg-green-100 dark:bg-green-900/50 border-green-500' : ''}>
-                      <AlertTitle>{feedback === 'correct' ? 'Correct!' : 'Not quite!'}</AlertTitle>
-                      <AlertDescription>
-                          {feedback === 'correct' ? `Great job! It's a(n) ${round.correctAnswer}.` : `That wasn't correct. The right answer is ${round.correctAnswer}.`}
-                      </AlertDescription>
-                  </Alert>
-                )}
-        </div>
-    );
-}
-
-function PictureWordMatch() {
-    const [wins, setWins] = useLocalStorage('picture_word_match_wins', 0);
-    const handleGameComplete = () => {
-        setWins(w => w + 1);
-    };
-
-    return (
-        <Card>
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    <CardTitle>Picture-Word Match</CardTitle>
-                    <Badge variant="secondary" className="flex items-center gap-2">
-                        <Award className="h-4 w-4 text-yellow-500"/> Wins: {wins}
-                    </Badge>
-                </div>
-                <CardDescription>Match the image to the correct word to earn points.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button className="w-full">Play Now</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-lg">
-                        <DialogHeader>
-                            <DialogTitle>What is this?</DialogTitle>
-                        </DialogHeader>
-                        <PictureWordMatchGame onGameComplete={handleGameComplete} />
-                    </DialogContent>
-                </Dialog>
-            </CardContent>
-        </Card>
-    );
-}
-
 
 // --- MAIN TAB COMPONENT ---
 
 export default function GamesTab() {
   return (
-    <div className="grid md:grid-cols-2 gap-6">
+    <div className="max-w-2xl mx-auto">
         <SentenceBuilder />
-        <PictureWordMatch />
     </div>
   );
 }
-
-    

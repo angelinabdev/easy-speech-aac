@@ -143,16 +143,6 @@ const helpData: { [key: string]: { title: string; steps: string[] }[] } = {
             "4. Once you think the sentence is correct, click the 'Check Sentence' button.",
             "5. If correct, you'll earn points and move to the next sentence. If incorrect, try rearranging the words again."
         ]
-    },
-    {
-        title: "Playing Picture-Word Match",
-        steps: [
-            "1. Click the 'Play Now' button to launch the game.",
-            "2. Look at the image displayed at the top.",
-            "3. Choose the word from the four buttons that you think matches the image.",
-            "4. If you're correct, you will earn points and the next image will appear.",
-            "5. If you're incorrect, the correct answer will be shown before you move on."
-        ]
     }
   ],
   mood: [
@@ -251,5 +241,3 @@ export default function HelpContent({ activeTab }: HelpContentProps) {
     </Accordion>
   );
 }
-
-    
