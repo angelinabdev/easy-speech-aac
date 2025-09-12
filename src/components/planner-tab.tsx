@@ -11,7 +11,7 @@ import { Plus, Trash2, Printer, Check, X, GripVertical } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 
 type Activity = { text: string };
-type ScheduledActivity = { id: string; text: string; completed: boolean };
+type ScheduledActivity = { id: string; text: string; completed: boolean; startTime: string; endTime: string };
 
 const defaultActivities: Activity[] = [
   { text: "🪥 Brush Teeth" },
@@ -26,7 +26,7 @@ const EMOJIS = [ "🎨", "🏫", "🎮", "💻", "🎵", "🧘", "🧼", "🚴",
 export default function PlannerTab() {
   const [customActivityInput, setCustomActivityInput] = useState("");
   const [customActivities, setCustomActivities] = useLocalStorage<Activity[]>('planner_customActivities', []);
-  const [schedule, setSchedule] = useLocalStorage<ScheduledActivity[]>('planner_schedule', []);
+  const [schedule, setSchedule] = useLocalStorage<ScheduledActivity[]>('planner_schedule_v2', []);
   const [points, setPoints] = useLocalStorage('planner_points', 0);
   const [level, setLevel] = useLocalStorage('planner_level', 1);
 
@@ -49,8 +49,15 @@ export default function PlannerTab() {
     e.preventDefault();
     const text = e.dataTransfer.getData("text/plain");
     if (text) {
-      setSchedule([...schedule, { id: Date.now().toString(), text, completed: false }]);
+      setSchedule([...schedule, { id: Date.now().toString(), text, completed: false, startTime: "", endTime: "" }]);
     }
+  };
+
+  const handleTimeChange = (id: string, timeType: 'startTime' | 'endTime', value: string) => {
+    const newSchedule = schedule.map(item => 
+      item.id === id ? { ...item, [timeType]: value } : item
+    );
+    setSchedule(newSchedule);
   };
 
   const toggleComplete = (id: string) => {
@@ -93,7 +100,8 @@ export default function PlannerTab() {
       printWindow.document.write('<style>body{font-family: sans-serif;} li {list-style-type: none; margin-bottom: 8px;}</style></head><body>');
       printWindow.document.write(`<h2>Daily Schedule - ${new Date().toLocaleDateString()}</h2>`);
       schedule.forEach(item => {
-        printWindow.document.write(`<p>${item.completed ? '✅' : '🔲'} ${item.text}</p>`);
+        const timeString = (item.startTime && item.endTime) ? ` (${item.startTime} - ${item.endTime})` : '';
+        printWindow.document.write(`<p>${item.completed ? '✅' : '🔲'} ${item.text}${timeString}</p>`);
       });
       printWindow.document.write('</body></html>');
       printWindow.document.close();
@@ -153,13 +161,32 @@ export default function PlannerTab() {
                     ) : (
                         <ul className="space-y-2">
                             {schedule.map((item) => (
-                                <li key={item.id} className={`flex items-center justify-between p-2 rounded-md ${item.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
-                                    <span className={item.completed ? 'line-through text-muted-foreground' : ''}>{item.text}</span>
-                                    <div className="flex gap-1">
-                                        <Button size="icon" variant="ghost" onClick={() => toggleComplete(item.id)}>
-                                            {item.completed ? <Check className="h-4 w-4 text-green-600" /> : <Check className="h-4 w-4" />}
-                                        </Button>
-                                        <Button size="icon" variant="ghost" onClick={() => removeScheduledItem(item.id)}><X className="h-4 w-4 text-destructive"/></Button>
+                                <li key={item.id} className={`p-2 rounded-md ${item.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+                                    <div className="flex items-center justify-between">
+                                        <span className={item.completed ? 'line-through text-muted-foreground' : ''}>{item.text}</span>
+                                        <div className="flex gap-1">
+                                            <Button size="icon" variant="ghost" onClick={() => toggleComplete(item.id)}>
+                                                {item.completed ? <Check className="h-4 w-4 text-green-600" /> : <Check className="h-4 w-4" />}
+                                            </Button>
+                                            <Button size="icon" variant="ghost" onClick={() => removeScheduledItem(item.id)}><X className="h-4 w-4 text-destructive"/></Button>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <Input
+                                            type="time"
+                                            value={item.startTime}
+                                            onChange={(e) => handleTimeChange(item.id, 'startTime', e.target.value)}
+                                            className="w-full h-8"
+                                            aria-label="Start time"
+                                        />
+                                        <span>-</span>
+                                        <Input
+                                            type="time"
+                                            value={item.endTime}
+                                            onChange={(e) => handleTimeChange(item.id, 'endTime', e.target.value)}
+                                            className="w-full h-8"
+                                            aria-label="End time"
+                                        />
                                     </div>
                                 </li>
                             ))}
