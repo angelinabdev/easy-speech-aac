@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Plus, Trash2, Printer, Check, X, GripVertical, Save, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Printer, Check, X, GripVertical, Save } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import {
   DndContext,
@@ -271,7 +271,7 @@ export default function PlannerTab() {
                             <ul className="space-y-2 pr-4">
                                 {allActivities.map((activity, i) => (
                                     <li key={i} draggable onDragStart={(e) => handleDragStart(e, activity.text)} className="flex items-center p-2 rounded-md bg-secondary cursor-grab active:cursor-grabbing">
-                                    <GripVertical className="h-5 w-5 text-muted-foreground mr-2" /> {activity.text}
+                                        <GripVertical className="h-5 w-5 text-muted-foreground mr-2" /> {activity.text}
                                     </li>
                                 ))}
                             </ul>
@@ -371,7 +371,7 @@ export default function PlannerTab() {
                                                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                                     <AlertDialogDescription>
                                                         This will permanently delete the "{saved.name}" schedule. This action cannot be undone.
-                                                    </Description>
+                                                    </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
