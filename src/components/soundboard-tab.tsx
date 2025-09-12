@@ -72,9 +72,9 @@ const playNoise = (duration: number) => {
 const SOUNDS = [
     { name: "Yes", icon: ThumbsUp, action: () => playTone(523.25, 659.25, 0.3) },
     { name: "No", icon: ThumbsDown, action: () => playTone(349.23, 261.63, 0.4) },
-    { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
-    { name: "Okay", icon: Check, action: () => playTone(659.25, 783.99, 0.3) },
-    { name: "Oops", icon: X, action: () => playTone(440, 220, 0.3) },
+    { name: "Bell", icon: Bell, action: () => playTone(1046.50, 1396.91, 0.5) },
+    { name: "Okay", icon: Check, action: () => { playTone(587.33, 0.15); setTimeout(() => playTone(880, 0.2), 150) } },
+    { name: "Oops", icon: X, action: () => playTone(220, 185, 0.3) },
     { name: "Haha", icon: Laugh, action: () => { playTone(600, 800, 0.1); setTimeout(() => playTone(500, 700, 0.1), 150) } },
 ];
 
