@@ -8,6 +8,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Trash2, Printer } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Lightbulb } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 type MoodEntry = { mood: string; timestamp: string, id: string };
 
@@ -54,25 +55,20 @@ export default function MoodTab() {
   const currentTip = activeMood ? moodTips[activeMood] : null;
 
   const printMoodData = async () => {
+    const chartElement = chartRef.current;
+    if (!chartElement) return;
+
+    const canvas = await html2canvas(chartElement, { backgroundColor: null });
+    const imgData = canvas.toDataURL('image/png');
+
     const printWindow = window.open('', '', 'height=600,width=800');
     if (printWindow) {
       printWindow.document.write('<html><head><title>Mood Report</title>');
-      printWindow.document.write('<style>body{font-family: sans-serif;} h1, h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px;} .entry { margin-bottom: 5px; } img { max-width: 100%; height: auto; margin-top: 1rem; } </style></head><body>');
+      printWindow.document.write('<style>body{font-family: sans-serif; margin: 20px;} h1, h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px;} .entry { margin-bottom: 5px; } img { max-width: 100%; height: auto; margin-top: 1rem; border: 1px solid #eee; } </style></head><body>');
       printWindow.document.write(`<h1>Mood Report - ${new Date().toLocaleDateString()}</h1>`);
       
       printWindow.document.write('<h2>Mood Analytics</h2>');
-      
-      try {
-        const { default: html2canvas } = await import('html2canvas');
-        if (chartRef.current) {
-            const canvas = await html2canvas(chartRef.current, { backgroundColor: null });
-            const imgData = canvas.toDataURL('image/png');
-            printWindow.document.write('<img src="' + imgData + '" />');
-        }
-      } catch (e) {
-          console.error("Could not print chart:", e);
-          printWindow.document.write('<p>Chart could not be rendered for printing.</p>');
-      }
+      printWindow.document.write('<img src="' + imgData + '" />');
 
       printWindow.document.write('<br/><h2>Mood History</h2>');
       if (moodHistory.length > 0) {
@@ -85,7 +81,11 @@ export default function MoodTab() {
       
       printWindow.document.write('</body></html>');
       printWindow.document.close();
-      printWindow.print();
+      
+      // Delay printing to ensure image is loaded
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
     }
   };
 
@@ -128,7 +128,9 @@ export default function MoodTab() {
 
         <div className="space-y-6">
             <Card>
-                <CardHeader><CardTitle>Mood Analytics</CardTitle></CardHeader>
+                <CardHeader>
+                    <CardTitle>Mood Analytics</CardTitle>
+                </CardHeader>
                 <CardContent className="h-[300px]" ref={chartRef}>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData}>
