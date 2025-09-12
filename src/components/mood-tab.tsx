@@ -1,17 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { Trash2, Lightbulb, Printer, Loader2 } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Trash2, Printer } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import { getSuggestion } from '@/ai/flows/suggestion-flow';
 
 type MoodEntry = { mood: string; timestamp: string, id: string };
-type ListItem = { id: string; text: string };
 
 const MOODS = [
   { name: 'Happy', emoji: '😊', color: '#4ade80' },
@@ -24,38 +21,11 @@ const MOODS = [
 
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
-  const [likes] = useLocalStorage<ListItem[]>('about_me_likes', []);
-  const [dislikes] = useLocalStorage<ListItem[]>('about_me_dislikes', []);
-  const [communication] = useLocalStorage<string>('about_me_communication', '');
-  
-  const [activeMood, setActiveMood] = useState<string | null>(null);
-  const [suggestion, setSuggestion] = useState<string | null>(null);
-  const [isLoadingSuggestion, setIsLoadingSuggestion] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
 
-  const handleMoodSelect = async (mood: string) => {
+  const handleMoodSelect = (mood: string) => {
     const newEntry: MoodEntry = { mood, timestamp: new Date().toLocaleString(), id: Date.now().toString() };
     setMoodHistory([newEntry, ...moodHistory].slice(0, 20));
-    setActiveMood(mood);
-    
-    setIsLoadingSuggestion(true);
-    setSuggestion(null);
-    try {
-      const userLikes = likes.map(like => like.text);
-      const userDislikes = dislikes.map(dislike => dislike.text);
-      const generatedSuggestion = await getSuggestion({ 
-        mood, 
-        likes: userLikes,
-        dislikes: userDislikes,
-        communication: communication
-      });
-      setSuggestion(generatedSuggestion);
-    } catch (error) {
-      console.error("Failed to get suggestion:", error);
-      setSuggestion("Sorry, I couldn't think of a suggestion right now. Please try again later.");
-    } finally {
-      setIsLoadingSuggestion(false);
-    }
   };
   
   const deleteMoodEntry = (id: string) => {
@@ -99,28 +69,13 @@ export default function MoodTab() {
     color: mood.color
   }));
 
-  const renderSuggestionContent = () => {
-    if (isLoadingSuggestion) {
-      return (
-          <div className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Generating a personalized tip...</span>
-          </div>
-      );
-    }
-    if (suggestion) {
-      return <p>{suggestion}</p>;
-    }
-    return <p>Select a mood to get a personalized tip based on your 'About Me' profile.</p>
-  }
-
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="space-y-6">
         <Card>
             <CardHeader>
                 <CardTitle>Mood Tracker</CardTitle>
-                <CardDescription>Tap your current mood to log it and get personalized tips.</CardDescription>
+                <CardDescription>Tap your current mood to log it.</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
                 {MOODS.map(mood => (
@@ -167,7 +122,7 @@ export default function MoodTab() {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="max-h-60 overflow-y-auto space-y-2 pr-2">
+            <CardContent className="max-h-[340px] overflow-y-auto space-y-2 pr-2">
                 {moodHistory.length > 0 ? moodHistory.map((entry) => (
                     <div key={entry.id} className="group text-sm text-muted-foreground p-2 bg-secondary rounded-md flex justify-between items-center">
                        <span>{entry.timestamp}: <span className="font-semibold text-foreground">{entry.mood}</span></span>
@@ -178,16 +133,6 @@ export default function MoodTab() {
                 )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
             </CardContent>
         </Card>
-        
-        <Alert>
-            <Lightbulb className="h-4 w-4" />
-            <AlertTitle>
-              {activeMood && !isLoadingSuggestion ? `Suggestion for feeling ${activeMood}` : 'AI-Powered Tip'}
-            </AlertTitle>
-            <AlertDescription className="space-y-2 mt-2">
-                {renderSuggestionContent()}
-            </AlertDescription>
-        </Alert>
       </div>
     </div>
   );
