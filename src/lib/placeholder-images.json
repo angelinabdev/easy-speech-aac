@@ -9,8 +9,8 @@
     {
       "id": "ball",
       "description": "Ball",
-      "imageUrl": "https://picsum.photos/seed/ball/400/300",
-      "imageHint": "soccer ball"
+      "imageUrl": "/images/ball.png",
+      "imageHint": "basketball"
     },
     {
       "id": "car",
