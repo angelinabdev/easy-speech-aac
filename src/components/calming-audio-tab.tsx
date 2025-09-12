@@ -4,18 +4,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 
 const audioTracks = [
     {
-        title: "Just Relax",
-        artist: "Lesfm",
-        url: "https://cdn.pixabay.com/audio/2022/05/18/audio_d07a16d552.mp3",
-        uppbeatUrl: "https://pixabay.com/music/beautiful-plays-just-relax-11157/",
-        license: "Pixabay License"
+        title: "Poco",
+        artist: "Roo Walker",
+        url: "https://cdn.uppbeat.io/audio/slug/poco.mp3",
+        uppbeatUrl: "https://uppbeat.io/t/roo-walker/poco",
+        license: "ORMZGL9CGL0BG0BK"
     },
     {
-        title: "The Cradle of Your Soul",
-        artist: "lemonmusicstudio",
-        url: "https://cdn.pixabay.com/audio/2022/11/17/audio_8ac9303495.mp3",
-        uppbeatUrl: "https://pixabay.com/music/meditation-spiritual-the-cradle-of-your-soul-125718/",
-        license: "Pixabay License"
+        title: "Winter Storm",
+        artist: "Brock Hewitt",
+        url: "https://cdn.uppbeat.io/audio/slug/winter-storm.mp3",
+        uppbeatUrl: "https://uppbeat.io/t/brock-hewitt-stories-in-sound/winter-storm",
+        license: "EUHZFMICI1RAV5BG"
     },
      {
         title: "Empty Mind",
@@ -42,7 +42,7 @@ export default function CalmingAudioTab() {
                         Your browser does not support the audio element.
                     </audio>
                     <p className="text-xs text-muted-foreground mt-2">
-                        Music from <a href={track.uppbeatUrl} target="_blank" rel="noopener noreferrer" className="underline">Pixabay</a>. License: {track.license}
+                        Music from <a href={track.uppbeatUrl} target="_blank" rel="noopener noreferrer" className="underline">Uppbeat</a>. License code: <strong>{track.license}</strong>
                     </p>
                 </div>
             ))}
