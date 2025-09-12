@@ -21,12 +21,12 @@ export default function ContactTab() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
-                <a href="mailto:easyspeechaac@example.com" className="block p-4 border rounded-lg hover:bg-secondary transition-colors">
+                <a href="mailto:easyspeechaac@gmail.com" className="block p-4 border rounded-lg hover:bg-secondary transition-colors">
                     <div className="flex items-center gap-3">
                         <Mail className="h-6 w-6 text-accent"/>
                         <div>
                             <h4 className="font-semibold">Email</h4>
-                            <p className="text-sm text-muted-foreground">easyspeechaac@example.com</p>
+                            <p className="text-sm text-muted-foreground">easyspeechaac@gmail.com</p>
                         </div>
                     </div>
                 </a>
