@@ -45,7 +45,7 @@
     {
       "id": "sun",
       "description": "Sun",
-      "imageUrl": "https://picsum.photos/seed/sun/400/300",
+      "imageUrl": "/images/sun.png",
       "imageHint": "bright sun"
     },
     {
