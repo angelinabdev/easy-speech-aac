@@ -28,8 +28,8 @@
     {
       "id": "cat",
       "description": "Cat",
-      "imageUrl": "https://picsum.photos/seed/cat/400/300",
-      "imageHint": "tabby cat"
+      "imageUrl": "/images/cat.png",
+      "imageHint": "orange white cat"
     },
     {
       "id": "house",
