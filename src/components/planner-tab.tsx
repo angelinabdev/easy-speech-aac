@@ -117,9 +117,14 @@ export default function PlannerTab() {
   const currentExp = points - ((level - 1) * 100);
   const progress = Math.min(100, (currentExp / expForNextLevel) * 100);
 
+  const allActivities = [...defaultActivities, ...customActivities];
+
   const addCustomActivity = () => {
     if (customActivityInput.trim() !== "") {
-      setCustomActivities([...customActivities, { text: customActivityInput.trim() }]);
+      const newActivity = { text: customActivityInput.trim() };
+      if (!customActivities.some(a => a.text === newActivity.text) && !defaultActivities.some(a => a.text === newActivity.text)) {
+        setCustomActivities([...customActivities, newActivity]);
+      }
       setCustomActivityInput("");
     }
   };
@@ -265,7 +270,7 @@ export default function PlannerTab() {
                         <p className="text-sm text-muted-foreground mb-4">Drag an activity to the schedule.</p>
                         <ScrollArea className="h-48">
                             <ul className="space-y-2 pr-4">
-                                {[...defaultActivities, ...customActivities].map((activity, i) => (
+                                {allActivities.map((activity, i) => (
                                     <li key={i} draggable onDragStart={(e) => handleDragStart(e, activity.text)} className="flex items-center p-2 rounded-md bg-secondary cursor-grab active:cursor-grabbing">
                                     <GripVertical className="h-5 w-5 text-muted-foreground mr-2" /> {activity.text}
                                     </li>
