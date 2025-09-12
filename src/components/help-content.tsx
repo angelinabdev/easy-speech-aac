@@ -128,7 +128,7 @@ const helpData: { [key: string]: { title: string; steps: string[] }[] } = {
         title: "Playing a Sound",
         steps: [
             "1. Simply click on any button in the grid.",
-            "2. The sound described on the button (e.g., 'Bell', 'Laughter') will play immediately.",
+            "2. The sound described on the button (e.g., 'Yes', 'No', 'Bell') will play immediately.",
             "3. Use these sounds for quick, non-verbal communication.",
         ]
     }

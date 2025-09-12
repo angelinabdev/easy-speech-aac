@@ -16,6 +16,7 @@ import GamesTab from "./games-tab";
 import AboutMeTab from "./about-me-tab";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "./ui/sheet";
 import HelpContent from "./help-content";
+import SoundboardTab from "./soundboard-tab";
 
 
 type Role = "user" | "caregiver" | null;
@@ -31,6 +32,7 @@ const TABS = [
   { id: "about", label: "About Me" },
   { id: "planner", label: "Daily Planner" },
   { id: "phrases", label: "My Phrases" },
+  { id: "soundboard", label: "Soundboard"},
   { id: "games", label: "Games" },
   { id: "mood", label: "Mood Tracker" },
   { id: "notes", label: "Caregiver Notes", roles: ["caregiver"] },
@@ -52,6 +54,8 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
         return <PlannerTab />;
       case "phrases":
         return <PhrasesTab />;
+      case "soundboard":
+        return <SoundboardTab />;
       case "games":
         return <GamesTab />;
       case "mood":
