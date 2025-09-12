@@ -84,7 +84,8 @@ export default function MoodTab() {
   const currentTip = activeMood ? moodTips[activeMood] : null;
 
   return (
-    <div className="grid gap-6 md:grid-cols-1">
+    <div className="grid gap-6 md:grid-cols-2">
+      <div className="space-y-6">
         <Card>
             <CardHeader>
                 <CardTitle>Mood Tracker</CardTitle>
@@ -98,7 +99,6 @@ export default function MoodTab() {
                 ))}
             </CardContent>
         </Card>
-
         <Card>
             <CardHeader>
                 <CardTitle>Mood Analytics</CardTitle>
@@ -119,7 +119,9 @@ export default function MoodTab() {
                 </ResponsiveContainer>
             </CardContent>
         </Card>
+      </div>
 
+      <div className="space-y-6">
         <Card>
             <CardHeader>
                 <div className="flex justify-between items-center">
@@ -145,7 +147,7 @@ export default function MoodTab() {
                 )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
             </CardContent>
         </Card>
-
+        
         {currentTip && activeMood && (
             <Alert>
                 <Lightbulb className="h-4 w-4" />
@@ -164,6 +166,7 @@ export default function MoodTab() {
                 </AlertDescription>
             </Alert>
         )}
+      </div>
     </div>
   );
 }
