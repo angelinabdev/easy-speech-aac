@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { Bell, Check, Laugh, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { Bell, Check, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 // A single AudioContext is reused to prevent creating multiple instances
@@ -87,8 +87,6 @@ const SOUNDS = [
     { name: "No", icon: ThumbsDown, action: () => playTone(349.23, 261.63, 0.4) },
     { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
     { name: "Okay", icon: Check, action: () => speakText("Okay") },
-    { name: "Oops", icon: X, action: () => speakText("Oops") },
-    { name: "Haha", icon: Laugh, action: () => { playTone(600, 800, 0.1); setTimeout(() => playTone(500, 700, 0.1), 150) } },
 ];
 
 
