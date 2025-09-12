@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -25,7 +25,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Info } from 'lucide-react';
+import { Info, Award } from 'lucide-react';
 
 const SENTENCES = [
     // Animals / Actions
@@ -111,6 +111,38 @@ function shuffleArray(array: any[]) {
   return array.slice().sort(() => Math.random() - 0.5);
 }
 
+const ConfettiPiece = ({ style }: { style: React.CSSProperties }) => (
+    <div className="absolute w-2 h-4" style={style}></div>
+);
+
+const Confetti = () => {
+    const [pieces, setPieces] = useState<React.CSSProperties[]>([]);
+
+    useEffect(() => {
+        const newPieces = Array.from({ length: 100 }).map(() => ({
+            left: `${Math.random() * 100}%`,
+            top: `${-20 - Math.random() * 100}%`,
+            transform: `rotate(${Math.random() * 360}deg)`,
+            backgroundColor: `hsl(${Math.random() * 360}, 70%, 50%)`,
+            animation: `fall ${2 + Math.random() * 3}s linear forwards`,
+        }));
+        setPieces(newPieces);
+    }, []);
+
+    return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+             <style jsx>{`
+                @keyframes fall {
+                    to {
+                        top: 120%;
+                    }
+                }
+            `}</style>
+            {pieces.map((style, index) => <ConfettiPiece key={index} style={style} />)}
+        </div>
+    );
+};
+
 type SortableItemData = {
     id: string;
     text: string;
@@ -137,7 +169,7 @@ function SortableItem({ item }: { item: SortableItemData }) {
   );
 }
 
-function SentenceBuilderGame() {
+function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void }) {
     const [points, setPoints] = useLocalStorage('planner_points', 0);
     const [level, setLevel] = useLocalStorage('planner_level', 1);
 
@@ -145,13 +177,29 @@ function SentenceBuilderGame() {
     const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
     const [items, setItems] = useState<SortableItemData[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
+    const [isGameComplete, setIsGameComplete] = useState(false);
 
-    const currentSentenceDef = shuffledSentences[currentSentenceIndex];
+    const loadSentence = useCallback((index: number) => {
+        if (index >= shuffledSentences.length) {
+            setIsGameComplete(true);
+            onGameComplete();
+            setTimeout(() => {
+                setIsGameComplete(false);
+                setCurrentSentenceIndex(0);
+                loadSentence(0);
+            }, 5000); // Show confetti for 5 seconds
+            return;
+        }
+        const sentenceDef = shuffledSentences[index];
+        setItems(shuffleArray(sentenceDef.words).map((word, i) => ({ id: `${word}_${i}`, text: word })));
+        setFeedback(null);
+    }, [shuffledSentences, onGameComplete]);
 
     useEffect(() => {
-        setItems(shuffleArray(currentSentenceDef.words).map((word, index) => ({ id: `${word}_${index}`, text: word })));
-        setFeedback(null);
-    }, [currentSentenceIndex, currentSentenceDef]);
+        loadSentence(0);
+    }, [loadSentence]);
+
+    const currentSentenceDef = shuffledSentences[currentSentenceIndex];
     
     const expForNextLevel = level * 100;
     const currentExp = points - ((level - 1) * 100);
@@ -176,7 +224,8 @@ function SentenceBuilderGame() {
             setFeedback('correct');
             setPoints(points + 20);
             setTimeout(() => {
-                setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % shuffledSentences.length);
+                setCurrentSentenceIndex((prevIndex) => prevIndex + 1);
+                loadSentence(currentSentenceIndex + 1);
             }, 1500);
         } else {
             setFeedback('incorrect');
@@ -196,6 +245,18 @@ function SentenceBuilderGame() {
         }
     };
     
+    if (isGameComplete) {
+        return (
+            <div className="text-center p-8 relative">
+                <Confetti />
+                <h2 className="text-3xl font-bold text-yellow-500">Congratulations!</h2>
+                <p className="mt-2 text-muted-foreground">You completed all the sentences!</p>
+            </div>
+        );
+    }
+
+    if (!currentSentenceDef) return null; // Or a loading state
+
     return (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <div className="space-y-4">
@@ -243,10 +304,19 @@ function SentenceBuilderGame() {
 }
 
 function SentenceBuilder() {
+  const [wins, setWins] = useLocalStorage('sentence_builder_wins', 0);
+  const handleGameComplete = () => {
+    setWins(w => w + 1);
+  };
   return (
       <Card>
           <CardHeader>
-              <CardTitle>Sentence Builder</CardTitle>
+              <div className="flex justify-between items-center">
+                <CardTitle>Sentence Builder</CardTitle>
+                <Badge variant="secondary" className="flex items-center gap-2">
+                    <Award className="h-4 w-4 text-yellow-500"/> Wins: {wins}
+                </Badge>
+              </div>
               <CardDescription>Drag and drop words to build simple sentences.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -258,7 +328,7 @@ function SentenceBuilder() {
                     <DialogHeader>
                         <DialogTitle>Build a Sentence</DialogTitle>
                     </DialogHeader>
-                    <SentenceBuilderGame />
+                    <SentenceBuilderGame onGameComplete={handleGameComplete} />
                 </DialogContent>
             </Dialog>
           </CardContent>
