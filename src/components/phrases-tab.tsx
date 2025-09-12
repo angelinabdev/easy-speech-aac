@@ -117,12 +117,25 @@ export default function PhrasesTab() {
   const [selectedVoice, setSelectedVoice] = useLocalStorage<string | undefined>('selected_voice_uri', undefined);
 
   useEffect(() => {
+    const voicesToExclude = [
+      'zarvox', 'wobble', 'whisper', 'trinoids', 'shelley', 'sandy', 'rocko',
+      'reed', 'ralph', 'organ', 'kathy', 'junior', 'karen', 'jester', 'grandpa',
+      'grandma', 'good news', 'flo', 'eddy', 'cellos', 'bubbles', 'boing',
+      'bells', 'bahh', 'bad news', 'albert'
+    ].map(v => v.toLowerCase());
+
     const loadVoices = () => {
-      const availableVoices = window.speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en'));
+      let availableVoices = window.speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en'));
+      
+      availableVoices = availableVoices.filter(voice => {
+        const voiceNameLower = voice.name.toLowerCase();
+        return !voicesToExclude.some(excludedName => voiceNameLower.includes(excludedName));
+      });
+
       if (availableVoices.length > 0) {
         setVoices(availableVoices);
-        if(!selectedVoice) {
-            setSelectedVoice(availableVoices.find(v => v.default)?.voiceURI);
+        if(!selectedVoice || !availableVoices.some(v => v.voiceURI === selectedVoice)) {
+            setSelectedVoice(availableVoices.find(v => v.default)?.voiceURI || availableVoices[0]?.voiceURI);
         }
       }
     };
