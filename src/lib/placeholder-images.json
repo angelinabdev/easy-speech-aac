@@ -39,8 +39,8 @@
     {
       "id": "tree",
       "description": "Tree",
-      "imageUrl": "https://picsum.photos/seed/tree/400/300",
-      "imageHint": "oak tree"
+      "imageUrl": "/images/tree.png",
+      "imageHint": "green tree"
     },
     {
       "id": "sun",
