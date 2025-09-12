@@ -34,6 +34,9 @@ const moodTips: { [key: string]: string } = {
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
   const [likes] = useLocalStorage<ListItem[]>('about_me_likes', []);
+  const [dislikes] = useLocalStorage<ListItem[]>('about_me_dislikes', []);
+  const [communication] = useLocalStorage<string>('about_me_communication', '');
+  
   const [activeMood, setActiveMood] = useState<string | null>(null);
   const [suggestion, setSuggestion] = useState<string | null>(null);
   const [isLoadingSuggestion, setIsLoadingSuggestion] = useState(false);
@@ -48,7 +51,13 @@ export default function MoodTab() {
     setSuggestion(null);
     try {
       const userLikes = likes.map(like => like.text);
-      const generatedSuggestion = await getSuggestion({ mood, likes: userLikes });
+      const userDislikes = dislikes.map(dislike => dislike.text);
+      const generatedSuggestion = await getSuggestion({ 
+        mood, 
+        likes: userLikes,
+        dislikes: userDislikes,
+        communication: communication
+      });
       setSuggestion(generatedSuggestion);
     } catch (error) {
       console.error("Failed to get suggestion:", error);
@@ -111,7 +120,7 @@ export default function MoodTab() {
     if (suggestion) {
       return <p>{suggestion}</p>;
     }
-    return <p>Select a mood to get a personalized tip based on your 'Likes'.</p>
+    return <p>Select a mood to get a personalized tip based on your 'About Me' profile.</p>
   }
 
   return (
