@@ -118,7 +118,7 @@ export default function PhrasesTab() {
 
   useEffect(() => {
     const loadVoices = () => {
-      const availableVoices = window.speechSynthesis.getVoices();
+      const availableVoices = window.speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en'));
       if (availableVoices.length > 0) {
         setVoices(availableVoices);
         if(!selectedVoice) {
