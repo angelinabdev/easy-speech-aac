@@ -176,7 +176,7 @@ export default function PlannerTab() {
                                             type="time"
                                             value={item.startTime}
                                             onChange={(e) => handleTimeChange(item.id, 'startTime', e.target.value)}
-                                            className="w-full h-8"
+                                            className="w-full h-7 text-xs"
                                             aria-label="Start time"
                                         />
                                         <span>-</span>
@@ -184,7 +184,7 @@ export default function PlannerTab() {
                                             type="time"
                                             value={item.endTime}
                                             onChange={(e) => handleTimeChange(item.id, 'endTime', e.target.value)}
-                                            className="w-full h-8"
+                                            className="w-full h-7 text-xs"
                                             aria-label="End time"
                                         />
                                     </div>
