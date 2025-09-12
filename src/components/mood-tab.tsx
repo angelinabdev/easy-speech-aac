@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Printer } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { Lightbulb } from 'lucide-react';
 
@@ -20,31 +20,13 @@ const MOODS = [
   { name: 'Tired', emoji: '😴', color: '#9ca3af' },
 ];
 
-const moodTips: Record<string, { activity: string; audioSuggestion: string }> = {
-  Happy: {
-    activity: "Flap your hands or rock to the rhythm of a favorite song.",
-    audioSuggestion: "The sound of happy, cheerful birds singing."
-  },
-  Sad: {
-    activity: "Wrap yourself in a soft, weighted blanket if you have one.",
-    audioSuggestion: "The sound of a gentle, purring cat."
-  },
-  Angry: {
-    activity: "Squeeze a stress ball or a soft toy tightly.",
-    audioSuggestion: "A low, humming sound, like a fan."
-  },
-  Anxious: {
-    activity: "Rock gently back and forth in a quiet space.",
-    audioSuggestion: "Listen to a slow, steady heartbeat sound."
-  },
-  Calm: {
-    activity: "Gently trace shapes on your arm with your finger.",
-    audioSuggestion: "The quiet sound of wind rustling through leaves."
-  },
-  Tired: {
-    activity: "Lie down in a dim room and close your eyes for a few minutes.",
-    audioSuggestion: "The sound of soft, instrumental music."
-  },
+const moodTips: Record<string, string> = {
+  Happy: "That's wonderful! Keep up the good work and continue what you are doing. Try something fun and relaxing that focuses on your special interests.",
+  Sad: "It's okay to feel sad. Try comforting activities, create a calm space, practice breathing exercises, or talk to someone you trust. Remember, you will be okay!",
+  Angry: "It's normal to feel angry. Calm yourself by identifying triggers, creating a predictable environment, counting to 10, or using breathing exercises. Find support if needed.",
+  Anxious: "Focus on your breath and stay in a calm, familiar setting. Use sensory objects or grounding techniques to help you feel more present and reduce stress.",
+  Calm: "Enjoy this moment. Do something relaxing and fun! Sensory objects and peaceful settings can help you recharge and maintain calm.",
+  Tired: "Take a well-deserved rest. Step away from the screen, have a short nap, or listen to calming music to refresh your mind."
 };
 
 
@@ -69,6 +51,37 @@ export default function MoodTab() {
   }));
 
   const currentTip = activeMood ? moodTips[activeMood] : null;
+
+  const printMoodData = () => {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (printWindow) {
+      printWindow.document.write('<html><head><title>Mood Report</title>');
+      printWindow.document.write('<style>body{font-family: sans-serif;} h2 { border-bottom: 1px solid #ccc; padding-bottom: 5px;} .entry { margin-bottom: 5px; } .analytics-item { display: flex; justify-content: space-between; max-width: 200px; }</style></head><body>');
+      printWindow.document.write(`<h1>Mood Report - ${new Date().toLocaleDateString()}</h1>`);
+      
+      printWindow.document.write('<h2>Mood History</h2>');
+      if (moodHistory.length > 0) {
+        moodHistory.forEach(entry => {
+          printWindow.document.write(`<div class="entry"><strong>${entry.timestamp}:</strong> ${entry.mood}</div>`);
+        });
+      } else {
+        printWindow.document.write('<p>No history recorded.</p>');
+      }
+
+      printWindow.document.write('<br/><h2>Mood Analytics</h2>');
+      if (chartData.some(d => d.count > 0)) {
+        chartData.filter(d => d.count > 0).forEach(data => {
+            printWindow.document.write(`<div class="analytics-item"><span>${data.name}:</span> <span>${data.count}</span></div>`);
+        });
+      } else {
+          printWindow.document.write('<p>No analytics data available.</p>');
+      }
+
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
 
   return (
     <div className="grid gap-6 md:grid-cols-3">
@@ -112,9 +125,14 @@ export default function MoodTab() {
                 <CardHeader>
                     <div className="flex justify-between items-center">
                         <CardTitle>Mood History</CardTitle>
-                        <Button variant="destructive" size="sm" onClick={() => setMoodHistory([])}>
-                            <Trash2 className="h-4 w-4 mr-1"/> Clear All
-                        </Button>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm" onClick={printMoodData}>
+                                <Printer className="h-4 w-4 mr-1"/> Print
+                            </Button>
+                            <Button variant="destructive" size="sm" onClick={() => setMoodHistory([])}>
+                                <Trash2 className="h-4 w-4 mr-1"/> Clear All
+                            </Button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent className="max-h-60 overflow-y-auto space-y-2 pr-2">
@@ -135,11 +153,10 @@ export default function MoodTab() {
                     {currentTip && activeMood && (
                         <Alert>
                             <Lightbulb className="h-4 w-4" />
-                            <AlertTitle>Suggestions for feeling {activeMood}</AlertTitle>
+                            <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
                             <AlertDescription className="space-y-2 mt-2">
-                                <p><strong>Activity:</strong> {currentTip.activity}</p>
-                                <p><strong>Calming Audio:</strong> {currentTip.audioSuggestion}</p>
-                            </AlertDescription>.
+                                <p>{currentTip}</p>
+                            </AlertDescription>
                         </Alert>
                     )}
                     {!currentTip && (
