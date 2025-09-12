@@ -9,6 +9,23 @@ import { Progress } from './ui/progress';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Plus, Trash2, Printer, Check, X, GripVertical } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type Activity = { text: string };
 type ScheduledActivity = { id: string; text: string; completed: boolean; startTime: string; endTime: string };
@@ -23,12 +40,70 @@ const defaultActivities: Activity[] = [
 
 const EMOJIS = [ "🎨", "🏫", "🎮", "💻", "🎵", "🧘", "🧼", "🚴", "🚶", "🧹", "🧺", "👕", "💤", "🫖", "📖" ];
 
+function SortableScheduledItem({ item, onTimeChange, onToggleComplete, onRemove }: { item: ScheduledActivity, onTimeChange: (id: string, type: 'startTime' | 'endTime', value: string) => void, onToggleComplete: (id: string) => void, onRemove: (id: string) => void }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({id: item.id});
+    
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
+    return (
+        <li ref={setNodeRef} style={style} className={`p-2 rounded-md flex flex-col gap-2 ${item.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+                        <GripVertical className="h-5 w-5 text-muted-foreground" />
+                    </button>
+                    <span className={item.completed ? 'line-through text-muted-foreground' : ''}>{item.text}</span>
+                </div>
+                <div className="flex gap-1">
+                    <Button size="icon" variant="ghost" onClick={() => onToggleComplete(item.id)}>
+                        {item.completed ? <Check className="h-4 w-4 text-green-600" /> : <Check className="h-4 w-4" />}
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => onRemove(item.id)}><X className="h-4 w-4 text-destructive"/></Button>
+                </div>
+            </div>
+            <div className="flex items-center gap-2 pl-8">
+                <Input
+                    type="time"
+                    value={item.startTime}
+                    onChange={(e) => onTimeChange(item.id, 'startTime', e.target.value)}
+                    className="w-full h-7 text-xs"
+                    aria-label="Start time"
+                />
+                <span>-</span>
+                <Input
+                    type="time"
+                    value={item.endTime}
+                    onChange={(e) => onTimeChange(item.id, 'endTime', e.target.value)}
+                    className="w-full h-7 text-xs"
+                    aria-label="End time"
+                />
+            </div>
+        </li>
+    );
+}
+
 export default function PlannerTab() {
   const [customActivityInput, setCustomActivityInput] = useState("");
   const [customActivities, setCustomActivities] = useLocalStorage<Activity[]>('planner_customActivities', []);
   const [schedule, setSchedule] = useLocalStorage<ScheduledActivity[]>('planner_schedule_v2', []);
   const [points, setPoints] = useLocalStorage('planner_points', 0);
   const [level, setLevel] = useLocalStorage('planner_level', 1);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const expForNextLevel = level * 100;
   const currentExp = points - ((level - 1) * 100);
@@ -48,10 +123,21 @@ export default function PlannerTab() {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const text = e.dataTransfer.getData("text/plain");
-    if (text) {
-      setSchedule([...schedule, { id: Date.now().toString(), text, completed: false, startTime: "", endTime: "" }]);
+    if (text && !schedule.some(item => item.text === text)) {
+      setSchedule(prev => [...prev, { id: Date.now().toString(), text, completed: false, startTime: "", endTime: "" }]);
     }
   };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const {active, over} = event;
+    if (over && active.id !== over.id) {
+        setSchedule((items) => {
+            const oldIndex = items.findIndex((item) => item.id === active.id);
+            const newIndex = items.findIndex((item) => item.id === over.id);
+            return arrayMove(items, oldIndex, newIndex);
+        });
+    }
+  }
 
   const handleTimeChange = (id: string, timeType: 'startTime' | 'endTime', value: string) => {
     const newSchedule = schedule.map(item => 
@@ -156,41 +242,24 @@ export default function PlannerTab() {
             <Card onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
                 <CardHeader><CardTitle>🗓️ Schedule</CardTitle></CardHeader>
                 <CardContent className="min-h-[200px] border-2 border-dashed border-primary rounded-md p-4 bg-background/50">
-                     {schedule.length === 0 ? (
+                    {schedule.length === 0 ? (
                         <p className="text-muted-foreground text-center pt-16">Drop activities here</p>
                     ) : (
-                        <ul className="space-y-2">
-                            {schedule.map((item) => (
-                                <li key={item.id} className={`p-2 rounded-md ${item.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-secondary'}`}>
-                                    <div className="flex items-center justify-between">
-                                        <span className={item.completed ? 'line-through text-muted-foreground' : ''}>{item.text}</span>
-                                        <div className="flex gap-1">
-                                            <Button size="icon" variant="ghost" onClick={() => toggleComplete(item.id)}>
-                                                {item.completed ? <Check className="h-4 w-4 text-green-600" /> : <Check className="h-4 w-4" />}
-                                            </Button>
-                                            <Button size="icon" variant="ghost" onClick={() => removeScheduledItem(item.id)}><X className="h-4 w-4 text-destructive"/></Button>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2 mt-2">
-                                        <Input
-                                            type="time"
-                                            value={item.startTime}
-                                            onChange={(e) => handleTimeChange(item.id, 'startTime', e.target.value)}
-                                            className="w-full h-7 text-xs"
-                                            aria-label="Start time"
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                            <SortableContext items={schedule.map(i => i.id)} strategy={verticalListSortingStrategy}>
+                                <ul className="space-y-2">
+                                    {schedule.map((item) => (
+                                        <SortableScheduledItem 
+                                            key={item.id} 
+                                            item={item}
+                                            onTimeChange={handleTimeChange}
+                                            onToggleComplete={toggleComplete}
+                                            onRemove={removeScheduledItem}
                                         />
-                                        <span>-</span>
-                                        <Input
-                                            type="time"
-                                            value={item.endTime}
-                                            onChange={(e) => handleTimeChange(item.id, 'endTime', e.target.value)}
-                                            className="w-full h-7 text-xs"
-                                            aria-label="End time"
-                                        />
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                                    ))}
+                                </ul>
+                            </SortableContext>
+                        </DndContext>
                     )}
                 </CardContent>
             </Card>
