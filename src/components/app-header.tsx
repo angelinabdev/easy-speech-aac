@@ -1,15 +1,16 @@
 "use client";
 
-import { LogOut, Sun, Moon } from "lucide-react";
+import { LogOut, Sun, Moon, HelpCircle } from "lucide-react";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import { Switch } from "./ui/switch";
 
 interface AppHeaderProps {
   onLogout: () => void;
+  onHelpClick: () => void;
 }
 
-export default function AppHeader({ onLogout }: AppHeaderProps) {
+export default function AppHeader({ onLogout, onHelpClick }: AppHeaderProps) {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -32,6 +33,10 @@ export default function AppHeader({ onLogout }: AppHeaderProps) {
             />
             <Moon className="h-5 w-5" />
           </div>
+          <Button variant="ghost" size="icon" onClick={onHelpClick}>
+            <HelpCircle className="h-5 w-5" />
+            <span className="sr-only">Help</span>
+          </Button>
           <Button variant="outline" size="sm" onClick={onLogout}>
             <LogOut className="mr-2 h-4 w-4" />
             Logout

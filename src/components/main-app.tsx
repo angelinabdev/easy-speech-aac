@@ -13,6 +13,9 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import GamesTab from "./games-tab";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "./ui/sheet";
+import HelpContent from "./help-content";
+
 
 type Role = "user" | "caregiver" | null;
 
@@ -35,6 +38,7 @@ const TABS = [
 
 export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -60,10 +64,11 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
   };
 
   const filteredTabs = TABS.filter(tab => !tab.roles || tab.roles.includes(role!));
+  const activeTabInfo = TABS.find(tab => tab.id === activeTab);
 
   return (
     <>
-      <AppHeader onLogout={onLogout} />
+      <AppHeader onLogout={onLogout} onHelpClick={() => setIsHelpOpen(true)} />
       <main className="container mx-auto p-4 md:p-6">
         <div className="mb-6">
           <p className="text-muted-foreground">
@@ -97,6 +102,20 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
 
         <div className="mt-6">{renderTabContent()}</div>
       </main>
+
+      <Sheet open={isHelpOpen} onOpenChange={setIsHelpOpen}>
+        <SheetContent className="sm:max-w-lg overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Help: {activeTabInfo?.label}</SheetTitle>
+            <SheetDescription>
+              Step-by-step guide to using the {activeTabInfo?.label} feature.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="py-6">
+            <HelpContent activeTab={activeTab} />
+          </div>
+        </SheetContent>
+      </Sheet>
     </>
   );
 }
