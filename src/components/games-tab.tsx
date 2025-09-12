@@ -116,7 +116,7 @@ function SentenceBuilderGame() {
     );
 
     const checkSentence = () => {
-        const userAnswer = sentenceBox.map(word => word.split('_')[0]).join(' ');
+        const userAnswer = sentenceBox.map(wordId => wordId.split('_')[0]).join(' ');
         if (userAnswer === currentSentenceDef.correct) {
             setFeedback('correct');
             setPoints(points + 20);
@@ -130,10 +130,10 @@ function SentenceBuilderGame() {
     };
     
     function findContainer(id: string) {
-        if (wordBank.find(item => item === id)) {
+        if (wordBank.includes(id)) {
             return "word-bank";
         }
-        if (sentenceBox.find(item => item === id)) {
+        if (sentenceBox.includes(id)) {
             return "sentence-box";
         }
         return null;
@@ -150,9 +150,9 @@ function SentenceBuilderGame() {
         if (activeId === overId) return;
     
         const activeContainer = findContainer(activeId);
-        const overContainer = findContainer(overId);
+        const overContainer = over.id === 'sentence-box-droppable' ? 'sentence-box' : findContainer(overId);
     
-        if (!activeContainer) return;
+        if (!activeContainer || !overContainer) return;
     
         if (activeContainer === overContainer) {
             // Reordering within the same container
@@ -171,16 +171,16 @@ function SentenceBuilderGame() {
             }
         } else {
             // Moving between containers
-            if (activeContainer === 'word-bank' && (overContainer === 'sentence-box' || overId === 'sentence-box-droppable')) {
+            if (activeContainer === 'word-bank' && overContainer === 'sentence-box') {
                 setWordBank(prev => prev.filter(id => id !== activeId));
-                setSentenceBox(prev => {
-                    const overIndex = overContainer === 'sentence-box' ? prev.indexOf(overId) : prev.length;
+                 setSentenceBox(prev => {
+                    const overIndex = sentenceBox.includes(overId) ? prev.indexOf(overId) : prev.length;
                     return [...prev.slice(0, overIndex), activeId, ...prev.slice(overIndex)];
                 });
-            } else if (activeContainer === 'sentence-box' && (overContainer === 'word-bank' || overId === 'word-bank-droppable')) {
-                setSentenceBox(prev => prev.filter(id => id !== activeId));
+            } else if (activeContainer === 'sentence-box' && overContainer === 'word-bank') {
+                 setSentenceBox(prev => prev.filter(id => id !== activeId));
                 setWordBank(prev => {
-                    const overIndex = overContainer === 'word-bank' ? prev.indexOf(overId) : prev.length;
+                     const overIndex = wordBank.includes(overId) ? prev.indexOf(overId) : prev.length;
                     return [...prev.slice(0, overIndex), activeId, ...prev.slice(overIndex)];
                 });
             }
