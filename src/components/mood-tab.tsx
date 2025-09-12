@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Lightbulb, Printer } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Lightbulb } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 type MoodEntry = { mood: string; timestamp: string, id: string };
 
@@ -21,18 +21,19 @@ const MOODS = [
 ];
 
 const moodTips: Record<string, string> = {
-  Happy: "It's great you're feeling happy! Keep enjoying what you're doing.",
-  Sad: "It's okay to feel sad sometimes. Try listening to some calming music or doing a quiet activity you enjoy.",
-  Angry: "Feeling angry is tough. Taking some deep breaths or squeezing a stress ball might help you feel calmer.",
-  Anxious: "When you feel anxious, try to focus on one thing you can see or touch. A favorite blanket or toy can be comforting.",
-  Calm: "Feeling calm is a peaceful state. It's a great time to relax and recharge.",
-  Tired: "It's important to rest when you're tired. A short nap or some quiet time might be what you need."
+  Happy: "That's wonderful! Keep up the good work and continue what you are doing. Try something fun and relaxing that focuses on your special interests.",
+  Sad: "It's okay to feel sad. Try comforting activities, create a calm space, practice breathing exercises, or talk to someone you trust. Remember, you will be okay!",
+  Angry: "It's normal to feel angry. Calm yourself by identifying triggers, creating a predictable environment, counting to 10, or using breathing exercises. Find support if needed.",
+  Anxious: "Focus on your breath and stay in a calm, familiar setting. Use sensory objects or grounding techniques to help you feel more present and reduce stress.",
+  Calm: "Enjoy this moment. Do something relaxing and fun! Sensory objects and peaceful settings can help you recharge and maintain calm.",
+  Tired: "Take a well-deserved rest. Step away from the screen, have a short nap, or listen to calming music to refresh your mind."
 };
 
 
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
   const [activeMood, setActiveMood] = useState<string | null>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   const handleMoodSelect = async (mood: string) => {
     const newEntry: MoodEntry = { mood, timestamp: new Date().toLocaleString(), id: Date.now().toString() };
@@ -43,6 +44,43 @@ export default function MoodTab() {
   const deleteMoodEntry = (id: string) => {
     setMoodHistory(moodHistory.filter(entry => entry.id !== id));
   };
+  
+  const printMoodData = async () => {
+    const chartElement = chartRef.current;
+    if (!chartElement) return;
+
+    const canvas = await html2canvas(chartElement, { backgroundColor: null });
+    const chartImage = canvas.toDataURL('image/png');
+
+    const printWindow = window.open('', '', 'height=800,width=800');
+    if (printWindow) {
+        printWindow.document.write('<html><head><title>Mood Report</title>');
+        printWindow.document.write('<style>body { font-family: sans-serif; } h1, h2 { color: #333; } .report-section { margin-bottom: 20px; page-break-inside: avoid; } img { max-width: 100%; border: 1px solid #ccc; border-radius: 8px; } .history-item { padding: 4px; border-bottom: 1px solid #eee; } </style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write('<h1>Mood Report</h1>');
+        
+        printWindow.document.write('<div class="report-section">');
+        printWindow.document.write('<h2>Mood Analytics</h2>');
+        printWindow.document.write(`<img src="${chartImage}" alt="Mood Analytics Chart" />`);
+        printWindow.document.write('</div>');
+        
+        printWindow.document.write('<div class="report-section">');
+        printWindow.document.write('<h2>Mood History</h2>');
+        if (moodHistory.length > 0) {
+            moodHistory.forEach(entry => {
+                printWindow.document.write(`<div class="history-item">${entry.timestamp}: <b>${entry.mood}</b></div>`);
+            });
+        } else {
+            printWindow.document.write('<p>No history to display.</p>');
+        }
+        printWindow.document.write('</div>');
+
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+  };
+
 
   const chartData = MOODS.map(mood => ({
     name: mood.name,
@@ -68,12 +106,16 @@ export default function MoodTab() {
                     ))}
                 </CardContent>
             </Card>
-            
+        </div>
+
+        <div className="space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Mood Analytics</CardTitle>
+                    <div className="flex justify-between items-center">
+                        <CardTitle>Mood Analytics</CardTitle>
+                    </div>
                 </CardHeader>
-                <CardContent className="h-[300px]">
+                <CardContent ref={chartRef} className="h-[250px] bg-card">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -87,6 +129,31 @@ export default function MoodTab() {
                             </Bar>
                         </BarChart>
                     </ResponsiveContainer>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <div className="flex justify-between items-center">
+                        <CardTitle>Mood History</CardTitle>
+                        <div className="flex items-center gap-2">
+                            <Button variant="outline" size="sm" onClick={printMoodData}>
+                                <Printer className="h-4 w-4 mr-1"/> Print
+                            </Button>
+                            <Button variant="destructive" size="sm" onClick={() => setMoodHistory([])}>
+                                <Trash2 className="h-4 w-4 mr-1"/> Clear All
+                            </Button>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent className="max-h-60 overflow-y-auto space-y-2 pr-2">
+                    {moodHistory.length > 0 ? moodHistory.map((entry) => (
+                        <div key={entry.id} className="group text-sm text-muted-foreground p-2 bg-secondary rounded-md flex justify-between items-center">
+                           <span>{entry.timestamp}: <span className="font-semibold text-foreground">{entry.mood}</span></span>
+                           <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={() => deleteMoodEntry(entry.id)}>
+                               <Trash2 className="h-4 w-4 text-destructive"/>
+                           </Button>
+                        </div>
+                    )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
                 </CardContent>
             </Card>
 
@@ -108,29 +175,6 @@ export default function MoodTab() {
                     </AlertDescription>
                 </Alert>
             )}
-        </div>
-
-        <div>
-            <Card>
-                <CardHeader>
-                    <div className="flex justify-between items-center">
-                        <CardTitle>Mood History</CardTitle>
-                        <Button variant="destructive" size="sm" onClick={() => setMoodHistory([])}>
-                            <Trash2 className="h-4 w-4 mr-1"/> Clear All
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent className="max-h-96 overflow-y-auto space-y-2 pr-2">
-                    {moodHistory.length > 0 ? moodHistory.map((entry) => (
-                        <div key={entry.id} className="group text-sm text-muted-foreground p-2 bg-secondary rounded-md flex justify-between items-center">
-                           <span>{entry.timestamp}: <span className="font-semibold text-foreground">{entry.mood}</span></span>
-                           <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={() => deleteMoodEntry(entry.id)}>
-                               <Trash2 className="h-4 w-4 text-destructive"/>
-                           </Button>
-                        </div>
-                    )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
-                </CardContent>
-            </Card>
         </div>
     </div>
   );
