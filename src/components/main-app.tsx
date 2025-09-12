@@ -6,7 +6,6 @@ import DashboardTab from "./dashboard-tab";
 import PlannerTab from "./planner-tab";
 import PhrasesTab from "./phrases-tab";
 import MoodTab from "./mood-tab";
-import CalmingAudioTab from "./calming-audio-tab";
 import CaregiverNotesTab from "./caregiver-notes-tab";
 import ResourcesTab from "./resources-tab";
 import ContactTab from "./contact-tab";
@@ -27,7 +26,6 @@ const TABS = [
   { id: "planner", label: "Daily Planner" },
   { id: "phrases", label: "My Phrases" },
   { id: "mood", label: "Mood Tracker" },
-  { id: "calming-audio", label: "Calming Audios" },
   { id: "notes", label: "Caregiver Notes", roles: ["caregiver"] },
   { id: "resources", label: "Resources" },
   { id: "contact", label: "Contact Us" },
@@ -46,8 +44,6 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
         return <PhrasesTab />;
       case "mood":
         return <MoodTab />;
-      case "calming-audio":
-        return <CalmingAudioTab />;
       case "notes":
         return <CaregiverNotesTab />;
       case "resources":
