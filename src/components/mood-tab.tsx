@@ -99,6 +99,24 @@ export default function MoodTab() {
                     ))}
                 </CardContent>
             </Card>
+            {currentTip && activeMood && (
+                <Alert>
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
+                    <AlertDescription className="space-y-2 mt-2">
+                        <p>{currentTip}</p>
+                    </AlertDescription>
+                </Alert>
+            )}
+             {!currentTip && (
+                <Alert>
+                    <Lightbulb className="h-4 w-4" />
+                    <AlertTitle>Mood Tips</AlertTitle>
+                    <AlertDescription className="space-y-2 mt-2">
+                        <p>Select a mood to get a tip.</p>
+                    </AlertDescription>
+                </Alert>
+            )}
         </div>
 
         <div className="space-y-6">
@@ -147,24 +165,6 @@ export default function MoodTab() {
                     )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
                 </CardContent>
             </Card>
-            {currentTip && activeMood && (
-                <Alert>
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertTitle>Suggestion for feeling {activeMood}</AlertTitle>
-                    <AlertDescription className="space-y-2 mt-2">
-                        <p>{currentTip}</p>
-                    </AlertDescription>
-                </Alert>
-            )}
-             {!currentTip && (
-                <Alert>
-                    <Lightbulb className="h-4 w-4" />
-                    <AlertTitle>Mood Tips</AlertTitle>
-                    <AlertDescription className="space-y-2 mt-2">
-                        <p>Select a mood to get a tip.</p>
-                    </AlertDescription>
-                </Alert>
-            )}
         </div>
     </div>
   );
