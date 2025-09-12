@@ -1,3 +1,66 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "apple",
+      "description": "Apple",
+      "imageUrl": "https://picsum.photos/seed/apple/400/300",
+      "imageHint": "red apple"
+    },
+    {
+      "id": "ball",
+      "description": "Ball",
+      "imageUrl": "https://picsum.photos/seed/ball/400/300",
+      "imageHint": "soccer ball"
+    },
+    {
+      "id": "car",
+      "description": "Car",
+      "imageUrl": "https://picsum.photos/seed/car/400/300",
+      "imageHint": "red car"
+    },
+    {
+      "id": "dog",
+      "description": "Dog",
+      "imageUrl": "https://picsum.photos/seed/dog/400/300",
+      "imageHint": "golden retriever"
+    },
+    {
+      "id": "cat",
+      "description": "Cat",
+      "imageUrl": "https://picsum.photos/seed/cat/400/300",
+      "imageHint": "tabby cat"
+    },
+    {
+      "id": "house",
+      "description": "House",
+      "imageUrl": "https://picsum.photos/seed/house/400/300",
+      "imageHint": "suburban house"
+    },
+    {
+      "id": "tree",
+      "description": "Tree",
+      "imageUrl": "https://picsum.photos/seed/tree/400/300",
+      "imageHint": "oak tree"
+    },
+    {
+      "id": "sun",
+      "description": "Sun",
+      "imageUrl": "https://picsum.photos/seed/sun/400/300",
+      "imageHint": "bright sun"
+    },
+    {
+      "id": "book",
+      "description": "Book",
+      "imageUrl": "https://picsum.photos/seed/book/400/300",
+      "imageHint": "open book"
+    },
+    {
+      "id": "chair",
+      "description": "Chair",
+      "imageUrl": "https://picsum.photos/seed/chair/400/300",
+      "imageHint": "wooden chair"
+    }
+  ]
 }
+
+    
