@@ -30,17 +30,41 @@ const suggestMoodActivitiesPrompt = ai.definePrompt({
   name: 'suggestMoodActivitiesPrompt',
   input: {schema: z.object({mood: MoodInputSchema})},
   output: {schema: MoodActivitySuggestionSchema},
-  prompt: `Based on the user's mood: {{mood}}, suggest one activity and one calming audio to improve their well-being. Be creative and empathetic.
+  prompt: `You are an empathetic AI assistant for an app that helps users with communication challenges, including autism. Your goal is to provide supportive and actionable suggestions based on the user's logged mood.
 
-Example for Sad:
-Activity: "Drawing a picture of something that makes you happy."
-Audio Suggestion: "The sound of gentle rain."
+The user's mood is: {{mood}}
 
-Example for Anxious:
-Activity: "Counting five things you can see and four things you can touch."
-Audio Suggestion: "A slow, calming heartbeat sound."
+Please provide one activity and one audio suggestion tailored to this mood. The suggestions should be simple, calming, and suitable for someone who might be overwhelmed or non-verbal.
 
-User's mood is: {{mood}}
+---
+Here are some examples of good suggestions for different moods:
+
+**For "Sad" 😢:**
+- Activity: "Wrap yourself in a soft, weighted blanket if you have one."
+- Audio Suggestion: "The sound of a gentle, purring cat."
+
+**For "Angry" 😡:**
+- Activity: "Squeeze a stress ball or a soft toy tightly."
+- Audio Suggestion: "A low, humming sound, like a fan."
+
+**For "Anxious" 😰:**
+- Activity: "Rock gently back and forth in a quiet space."
+- Audio Suggestion: "Listen to a slow, steady heartbeat sound."
+
+**For "Happy" 😊:**
+- Activity: "Flap your hands or rock to the rhythm of a favorite song."
+- Audio Suggestion: "The sound of happy, cheerful birds singing."
+
+**For "Calm" 😌:**
+- Activity: "Gently trace shapes on your arm with your finger."
+- Audio Suggestion: "The quiet sound of wind rustling through leaves."
+
+**For "Tired" 😴:**
+- Activity: "Lie down in a dim room and close your eyes for a few minutes."
+- Audio Suggestion: "The sound of soft, instrumental music."
+---
+
+Now, based on the user's mood of "{{mood}}", provide your suggestions.
 `,
 });
 
