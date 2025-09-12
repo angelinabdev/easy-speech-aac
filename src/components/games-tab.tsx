@@ -111,38 +111,6 @@ function shuffleArray(array: any[]) {
   return array.slice().sort(() => Math.random() - 0.5);
 }
 
-const ConfettiPiece = ({ style }: { style: React.CSSProperties }) => (
-    <div className="absolute w-2 h-4" style={style}></div>
-);
-
-const Confetti = () => {
-    const [pieces, setPieces] = useState<React.CSSProperties[]>([]);
-
-    useEffect(() => {
-        const newPieces = Array.from({ length: 100 }).map(() => ({
-            left: `${Math.random() * 100}%`,
-            top: `${-20 - Math.random() * 100}%`,
-            transform: `rotate(${Math.random() * 360}deg)`,
-            backgroundColor: `hsl(${Math.random() * 360}, 70%, 50%)`,
-            animation: `fall ${2 + Math.random() * 3}s linear forwards`,
-        }));
-        setPieces(newPieces);
-    }, []);
-
-    return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-             <style jsx>{`
-                @keyframes fall {
-                    to {
-                        top: 120%;
-                    }
-                }
-            `}</style>
-            {pieces.map((style, index) => <ConfettiPiece key={index} style={style} />)}
-        </div>
-    );
-};
-
 type SortableItemData = {
     id: string;
     text: string;
@@ -178,7 +146,6 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
 
     const [items, setItems] = useState<SortableItemData[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
-    const [isGameComplete, setIsGameComplete] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(() => {
@@ -191,13 +158,10 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
     const loadSentence = useCallback((index: number) => {
         if (shuffledSentences.length > 0) {
             if (index >= shuffledSentences.length) {
-                setIsGameComplete(true);
                 onGameComplete();
-                setTimeout(() => {
-                    setIsGameComplete(false);
-                    setCurrentSentenceIndex(0);
-                    setShuffledSentences(shuffleArray(SENTENCES)); // Reshuffle for new game
-                }, 5000);
+                setCurrentSentenceIndex(0);
+                setShuffledSentences(shuffleArray(SENTENCES));
+                // The game will reload with the first sentence of the new shuffled list
                 return;
             }
             const sentenceDef = shuffledSentences[index];
@@ -208,7 +172,7 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
 
     useEffect(() => {
         loadSentence(currentSentenceIndex);
-    }, [loadSentence, currentSentenceIndex, shuffledSentences]);
+    }, [loadSentence, currentSentenceIndex]);
 
 
     const currentSentenceDef = shuffledSentences[currentSentenceIndex];
@@ -256,16 +220,6 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
         }
     };
     
-    if (isGameComplete) {
-        return (
-            <div className="text-center p-8 relative">
-                <Confetti />
-                <h2 className="text-3xl font-bold text-yellow-500">Congratulations!</h2>
-                <p className="mt-2 text-muted-foreground">You completed all the sentences!</p>
-            </div>
-        );
-    }
-
     if (!currentSentenceDef) return null; // Or a loading state
 
     return (
