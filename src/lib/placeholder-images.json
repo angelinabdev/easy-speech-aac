@@ -57,7 +57,7 @@
     {
       "id": "chair",
       "description": "Chair",
-      "imageUrl": "https://picsum.photos/seed/chair/400/300",
+      "imageUrl": "/images/chair.png",
       "imageHint": "wooden chair"
     }
   ]
