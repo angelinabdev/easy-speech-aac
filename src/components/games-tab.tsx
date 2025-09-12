@@ -179,26 +179,27 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
     const [items, setItems] = useState<SortableItemData[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
     const [isGameComplete, setIsGameComplete] = useState(false);
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(() => {
-      // Shuffle sentences only once when the game is first played or reset
-      if (shuffledSentences.length === 0) {
-        setShuffledSentences(shuffleArray(SENTENCES));
-      }
-    }, [shuffledSentences, setShuffledSentences]);
+        if (isInitialLoad || shuffledSentences.length === 0) {
+            setShuffledSentences(shuffleArray(SENTENCES));
+            setIsInitialLoad(false);
+        }
+    }, [isInitialLoad, shuffledSentences.length, setShuffledSentences]);
 
     const loadSentence = useCallback((index: number) => {
-        if (index >= shuffledSentences.length && shuffledSentences.length > 0) {
-            setIsGameComplete(true);
-            onGameComplete();
-            setTimeout(() => {
-                setIsGameComplete(false);
-                setCurrentSentenceIndex(0);
-                setShuffledSentences(shuffleArray(SENTENCES)); // Reshuffle for new game
-            }, 5000);
-            return;
-        }
         if (shuffledSentences.length > 0) {
+            if (index >= shuffledSentences.length) {
+                setIsGameComplete(true);
+                onGameComplete();
+                setTimeout(() => {
+                    setIsGameComplete(false);
+                    setCurrentSentenceIndex(0);
+                    setShuffledSentences(shuffleArray(SENTENCES)); // Reshuffle for new game
+                }, 5000);
+                return;
+            }
             const sentenceDef = shuffledSentences[index];
             setItems(shuffleArray(sentenceDef.words).map((word, i) => ({ id: `${word}_${i}`, text: word })));
             setFeedback(null);
