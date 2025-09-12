@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -138,11 +138,12 @@ function SentenceBuilderGame() {
     const [points, setPoints] = useLocalStorage('planner_points', 0);
     const [level, setLevel] = useLocalStorage('planner_level', 1);
 
+    const shuffledSentences = useMemo(() => shuffleArray(SENTENCES), []);
     const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
     const [items, setItems] = useState<SortableItemData[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
 
-    const currentSentenceDef = SENTENCES[currentSentenceIndex];
+    const currentSentenceDef = shuffledSentences[currentSentenceIndex];
 
     useEffect(() => {
         setItems(shuffleArray(currentSentenceDef.words).map((word, index) => ({ id: `${word}_${index}`, text: word })));
@@ -172,7 +173,7 @@ function SentenceBuilderGame() {
             setFeedback('correct');
             setPoints(points + 20);
             setTimeout(() => {
-                setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % SENTENCES.length);
+                setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % shuffledSentences.length);
             }, 1500);
         } else {
             setFeedback('incorrect');
