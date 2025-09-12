@@ -122,7 +122,7 @@ export default function PlannerTab() {
   const addCustomActivity = () => {
     if (customActivityInput.trim() !== "") {
       const newActivity = { text: customActivityInput.trim() };
-      if (!customActivities.some(a => a.text === newActivity.text) && !defaultActivities.some(a => a.text === newActivity.text)) {
+      if (!allActivities.some(a => a.text === newActivity.text)) {
         setCustomActivities([...customActivities, newActivity]);
       }
       setCustomActivityInput("");
@@ -231,7 +231,6 @@ export default function PlannerTab() {
   const deleteSchedule = (id: string) => {
     setSavedSchedules(savedSchedules.filter(s => s.id !== id));
   };
-
 
   return (
     <div className="grid gap-6 md:grid-cols-3">
@@ -372,7 +371,7 @@ export default function PlannerTab() {
                                                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                                     <AlertDialogDescription>
                                                         This will permanently delete the "{saved.name}" schedule. This action cannot be undone.
-                                                    </AlertDialogDescription>
+                                                    </Description>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
