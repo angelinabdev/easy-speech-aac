@@ -33,6 +33,7 @@ const TABS = [
 
 export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [showNotes, setShowNotes] = useState(false);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -45,7 +46,7 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
       case "mood":
         return <MoodTab />;
       case "notes":
-        return <CaregiverNotesTab />;
+        return <CaregiverNotesTab showNotes={showNotes} setShowNotes={setShowNotes} />;
       case "resources":
         return <ResourcesTab />;
       case "contact":
@@ -55,6 +56,13 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
     }
   };
 
+  const filteredTabs = TABS.filter(tab => {
+    if (tab.id === 'notes') {
+      return role === 'caregiver' && showNotes;
+    }
+    return !tab.roles || tab.roles.includes(role!);
+  });
+
   return (
     <>
       <AppHeader onLogout={onLogout} />
@@ -63,13 +71,18 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
           <p className="text-muted-foreground">
             Welcome back! You are logged in as a{" "}
             <span className="font-semibold text-primary">{role}</span>.
+            {role === 'caregiver' && !showNotes && (
+              <Button variant="link" onClick={() => setActiveTab('notes')}>
+                Access Notes
+              </Button>
+            )}
           </p>
         </div>
         
         <div className="relative">
           <ScrollArea className="w-full whitespace-nowrap rounded-lg">
             <div className="flex space-x-2 border-b pb-2">
-              {TABS.filter(tab => !tab.roles || tab.roles.includes(role!)).map((tab) => (
+              {filteredTabs.map((tab) => (
                 <Button
                   key={tab.id}
                   variant="ghost"

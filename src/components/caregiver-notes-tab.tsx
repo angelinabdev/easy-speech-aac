@@ -6,16 +6,36 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { ScrollArea } from './ui/scroll-area';
-import { Trash2 } from 'lucide-react';
+import { EyeOff, Trash2 } from 'lucide-react';
+import { Input } from './ui/input';
+import { Alert, AlertDescription } from './ui/alert';
 
 type Note = {
     text: string;
     timestamp: string;
 }
 
-export default function CaregiverNotesTab() {
+interface CaregiverNotesTabProps {
+    showNotes: boolean;
+    setShowNotes: (show: boolean) => void;
+}
+
+const PASSCODE = "1234";
+
+export default function CaregiverNotesTab({ showNotes, setShowNotes }: CaregiverNotesTabProps) {
   const [notes, setNotes] = useLocalStorage<Note[]>('caregiver_notes', []);
   const [newNote, setNewNote] = useState("");
+  const [passcode, setPasscode] = useState('');
+  const [error, setError] = useState('');
+
+  const handlePasscodeSubmit = () => {
+    if (passcode === PASSCODE) {
+        setShowNotes(true);
+        setError('');
+    } else {
+        setError('Incorrect passcode.');
+    }
+  };
 
   const saveNote = () => {
     if (newNote.trim()) {
@@ -32,6 +52,28 @@ export default function CaregiverNotesTab() {
     const updatedNotes = [...notes];
     updatedNotes.splice(index, 1);
     setNotes(updatedNotes);
+  }
+
+  if (!showNotes) {
+    return (
+        <Card className="max-w-md mx-auto">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><EyeOff /> Secure Area</CardTitle>
+                <CardDescription>Enter the passcode to view caregiver notes.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <Input 
+                    type="password"
+                    placeholder="Enter passcode"
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handlePasscodeSubmit()}
+                />
+                {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
+                <Button onClick={handlePasscodeSubmit} className="w-full">Unlock Notes</Button>
+            </CardContent>
+        </Card>
+    )
   }
 
   return (
