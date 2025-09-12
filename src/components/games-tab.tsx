@@ -59,14 +59,19 @@ function shuffleArray(array: any[]) {
   return array.slice().sort(() => Math.random() - 0.5);
 }
 
-function SortableItem({ id }: { id: string }) {
+type SortableItemData = {
+    id: string;
+    text: string;
+}
+
+function SortableItem({ item }: { item: SortableItemData }) {
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
-  } = useSortable({ id });
+  } = useSortable({ id: item.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -75,7 +80,7 @@ function SortableItem({ id }: { id: string }) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="p-2 px-4 bg-primary text-primary-foreground rounded-lg shadow cursor-grab touch-none select-none">
-      {id.split('_')[0]}
+      {item.text}
     </div>
   );
 }
@@ -85,13 +90,13 @@ function SentenceBuilderGame() {
     const [level, setLevel] = useLocalStorage('planner_level', 1);
 
     const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
-    const [items, setItems] = useState<string[]>([]);
+    const [items, setItems] = useState<SortableItemData[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
 
     const currentSentenceDef = SENTENCES[currentSentenceIndex];
 
     useEffect(() => {
-        setItems(shuffleArray(currentSentenceDef.words).map((word, index) => `${word}_${index}`));
+        setItems(shuffleArray(currentSentenceDef.words).map((word, index) => ({ id: `${word}_${index}`, text: word })));
         setFeedback(null);
     }, [currentSentenceIndex, currentSentenceDef]);
     
@@ -113,7 +118,7 @@ function SentenceBuilderGame() {
     );
 
     const checkSentence = () => {
-        const userAnswer = items.map(wordId => wordId.split('_')[0]).join(' ');
+        const userAnswer = items.map(item => item.text).join(' ');
         if (userAnswer === currentSentenceDef.correct) {
             setFeedback('correct');
             setPoints(points + 20);
@@ -131,8 +136,8 @@ function SentenceBuilderGame() {
     
         if (active.id !== over?.id) {
           setItems((currentItems) => {
-            const oldIndex = currentItems.indexOf(active.id as string);
-            const newIndex = currentItems.indexOf(over!.id as string);
+            const oldIndex = currentItems.findIndex(item => item.id === active.id);
+            const newIndex = currentItems.findIndex(item => item.id === over!.id);
             return arrayMove(currentItems, oldIndex, newIndex);
           });
         }
@@ -163,9 +168,9 @@ function SentenceBuilderGame() {
                     <AlertDescription>{currentSentenceDef.prompt}</AlertDescription>
                 </Alert>
                 
-                <SortableContext items={items} strategy={horizontalListSortingStrategy}>
+                <SortableContext items={items.map(i => i.id)} strategy={horizontalListSortingStrategy}>
                     <div id="word-bank-droppable" className="p-4 bg-secondary rounded-lg min-h-[100px] flex items-center justify-center gap-2 flex-wrap">
-                         {items.map(wordId => <SortableItem key={wordId} id={wordId} />)}
+                         {items.map(item => <SortableItem key={item.id} item={item} />)}
                     </div>
                 </SortableContext>
 
