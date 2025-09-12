@@ -13,6 +13,8 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import GamesTab from "./games-tab";
+import SoundboardTab from "./soundboard-tab";
+import AboutMeTab from "./about-me-tab";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "./ui/sheet";
 import HelpContent from "./help-content";
 
@@ -27,8 +29,10 @@ interface MainAppProps {
 
 const TABS = [
   { id: "dashboard", label: "Dashboard" },
+  { id: "about", label: "About Me" },
   { id: "planner", label: "Daily Planner" },
   { id: "phrases", label: "My Phrases" },
+  { id: "soundboard", label: "Soundboard" },
   { id: "games", label: "Games" },
   { id: "mood", label: "Mood Tracker" },
   { id: "notes", label: "Caregiver Notes", roles: ["caregiver"] },
@@ -44,10 +48,14 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
     switch (activeTab) {
       case "dashboard":
         return <DashboardTab role={role} onRoleSwitch={onRoleSwitch} />;
+      case "about":
+        return <AboutMeTab />;
       case "planner":
         return <PlannerTab />;
       case "phrases":
         return <PhrasesTab />;
+      case "soundboard":
+        return <SoundboardTab />;
       case "games":
         return <GamesTab />;
       case "mood":

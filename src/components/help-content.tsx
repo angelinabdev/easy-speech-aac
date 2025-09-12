@@ -29,6 +29,31 @@ const helpData: { [key: string]: { title: string; steps: string[] }[] } = {
         ]
     }
   ],
+  about: [
+    {
+        title: "Editing Your Information",
+        steps: [
+            "1. Click into any text field (like 'Name' or 'Allergies') to start typing.",
+            "2. Your changes are saved automatically as you type.",
+        ]
+    },
+    {
+        title: "Managing Lists (Contacts, Likes, Dislikes)",
+        steps: [
+            "1. To add an item, fill out the input fields in the corresponding card (e.g., 'Name' and 'Phone' for a contact).",
+            "2. Click the 'Add' button to save the item to the list.",
+            "3. To remove an item, click the trash can icon next to it.",
+        ]
+    },
+    {
+        title: "Using the 'Share My Info' Button",
+        steps: [
+            "1. Click the 'Share My Info' button at the top.",
+            "2. This copies a summary of your information to the clipboard.",
+            "3. You can then paste this information into an email, text message, or document to easily share it with a caregiver, doctor, or family member.",
+        ]
+    }
+  ],
   planner: [
     {
       title: "Adding an Activity to the Schedule",
@@ -95,6 +120,16 @@ const helpData: { [key: string]: { title: string; steps: string[] }[] } = {
             "1. Find the 'Custom Voice' card.",
             "2. Click the dropdown to see a list of available voices.",
             "3. Select a new voice. All spoken phrases will now use this voice."
+        ]
+    }
+  ],
+  soundboard: [
+    {
+        title: "Playing a Sound",
+        steps: [
+            "1. Simply click on any button in the grid.",
+            "2. The sound described on the button (e.g., 'Bell', 'Laughter') will play immediately.",
+            "3. Use these sounds for quick, non-verbal communication.",
         ]
     }
   ],
