@@ -173,31 +173,41 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
     const [points, setPoints] = useLocalStorage('planner_points', 0);
     const [level, setLevel] = useLocalStorage('planner_level', 1);
 
-    const shuffledSentences = useMemo(() => shuffleArray(SENTENCES), []);
-    const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+    const [shuffledSentences, setShuffledSentences] = useLocalStorage('shuffled_sentences', []);
+    const [currentSentenceIndex, setCurrentSentenceIndex] = useLocalStorage('sentence_builder_current_index', 0);
+
     const [items, setItems] = useState<SortableItemData[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
     const [isGameComplete, setIsGameComplete] = useState(false);
 
+    useEffect(() => {
+      // Shuffle sentences only once when the game is first played or reset
+      if (shuffledSentences.length === 0) {
+        setShuffledSentences(shuffleArray(SENTENCES));
+      }
+    }, [shuffledSentences, setShuffledSentences]);
+
     const loadSentence = useCallback((index: number) => {
-        if (index >= shuffledSentences.length) {
+        if (index >= shuffledSentences.length && shuffledSentences.length > 0) {
             setIsGameComplete(true);
             onGameComplete();
             setTimeout(() => {
                 setIsGameComplete(false);
                 setCurrentSentenceIndex(0);
-                loadSentence(0);
-            }, 5000); // Show confetti for 5 seconds
+                setShuffledSentences(shuffleArray(SENTENCES)); // Reshuffle for new game
+            }, 5000);
             return;
         }
-        const sentenceDef = shuffledSentences[index];
-        setItems(shuffleArray(sentenceDef.words).map((word, i) => ({ id: `${word}_${i}`, text: word })));
-        setFeedback(null);
-    }, [shuffledSentences, onGameComplete]);
+        if (shuffledSentences.length > 0) {
+            const sentenceDef = shuffledSentences[index];
+            setItems(shuffleArray(sentenceDef.words).map((word, i) => ({ id: `${word}_${i}`, text: word })));
+            setFeedback(null);
+        }
+    }, [shuffledSentences, onGameComplete, setCurrentSentenceIndex, setShuffledSentences]);
 
     useEffect(() => {
         loadSentence(currentSentenceIndex);
-    }, [loadSentence, currentSentenceIndex]);
+    }, [loadSentence, currentSentenceIndex, shuffledSentences]);
 
 
     const currentSentenceDef = shuffledSentences[currentSentenceIndex];
