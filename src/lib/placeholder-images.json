@@ -3,7 +3,7 @@
     {
       "id": "apple",
       "description": "Apple",
-      "imageUrl": "https://picsum.photos/seed/apple/400/300",
+      "imageUrl": "/images/apple.png",
       "imageHint": "red apple"
     },
     {
@@ -62,5 +62,3 @@
     }
   ]
 }
-
-    
