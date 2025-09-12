@@ -87,7 +87,7 @@ const SOUNDS = [
     { name: "No", icon: ThumbsDown, action: () => playTone(349.23, 261.63, 0.4) },
     { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
     { name: "Okay", icon: Check, action: () => speakText("Okay") },
-    { name: "Oops", icon: X, action: () => playTone(220, 185, 0.3) },
+    { name: "Oops", icon: X, action: () => speakText("Oops") },
     { name: "Haha", icon: Laugh, action: () => { playTone(600, 800, 0.1); setTimeout(() => playTone(500, 700, 0.1), 150) } },
 ];
 
