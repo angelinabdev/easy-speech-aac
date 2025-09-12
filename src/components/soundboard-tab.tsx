@@ -16,6 +16,19 @@ const getAudioContext = () => {
   return audioContext;
 };
 
+const speakText = (text: string) => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voices = window.speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en'));
+        const defaultVoice = voices.find(v => v.default);
+        // Attempt to use a locally stored voice if available, otherwise use default
+        const storedVoiceURI = localStorage.getItem('selected_voice_uri');
+        const storedVoice = storedVoiceURI ? voices.find(v => v.voiceURI === JSON.parse(storedVoiceURI)) : null;
+        
+        utterance.voice = storedVoice || defaultVoice || voices[0];
+        window.speechSynthesis.speak(utterance);
+    }
+};
 
 const playTone = (freq1: number, freq2: number, duration: number) => {
   const ctx = getAudioContext();
@@ -72,8 +85,8 @@ const playNoise = (duration: number) => {
 const SOUNDS = [
     { name: "Yes", icon: ThumbsUp, action: () => playTone(523.25, 659.25, 0.3) },
     { name: "No", icon: ThumbsDown, action: () => playTone(349.23, 261.63, 0.4) },
-    { name: "Bell", icon: Bell, action: () => playTone(1046.50, 1396.91, 0.5) },
-    { name: "Okay", icon: Check, action: () => { playTone(587.33, 0.15); setTimeout(() => playTone(880, 0.2), 150) } },
+    { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
+    { name: "Okay", icon: Check, action: () => speakText("Okay") },
     { name: "Oops", icon: X, action: () => playTone(220, 185, 0.3) },
     { name: "Haha", icon: Laugh, action: () => { playTone(600, 800, 0.1); setTimeout(() => playTone(500, 700, 0.1), 150) } },
 ];
@@ -86,9 +99,16 @@ export default function SoundboardTab() {
     // Ensure AudioContext is created by a user gesture on the first click
     const initAudio = () => {
         getAudioContext();
+        // Pre-load voices for speech synthesis
+        if (window.speechSynthesis && window.speechSynthesis.getVoices().length === 0) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
         window.removeEventListener('click', initAudio);
     };
-    window.addEventListener('click', initAudio);
+    window.addEventListener('click', initAudio, { once: true });
+    
     return () => window.removeEventListener('click', initAudio);
   }, []);
 
