@@ -62,7 +62,7 @@ const SENTENCES = [
     { words: ["She", "is", "excited"], correct: "She is excited", prompt: "Put the words in order to describe how she feels." },
     { words: ["He", "is", "scared"], correct: "He is scared", prompt: "Build the sentence about his feeling." },
     { words: ["We", "are", "tired"], correct: "We are tired", prompt: "Drag the words to form the sentence about how we feel." },
-    
+
     // Animals / Nature
     { words: ["The", "rabbit", "hops"], correct: "The rabbit hops", prompt: "Describe what the rabbit is doing." },
     { words: ["The", "frog", "jumps"], correct: "The frog jumps", prompt: "What action does the frog take?" },
@@ -100,9 +100,12 @@ const SENTENCES = [
 
     // Simple Requests / Social Phrases
     { words: ["Please", "sit", "here"], correct: "Please sit here", prompt: "Where should you ask someone to sit?" },
+    { words: ["Can", "I", "have", "a", "pencil?"], correct: "Can I have a pencil?", prompt: "How do you ask for a pencil?" },
     { words: ["I", "like", "this", "game"], correct: "I like this game", prompt: "What do you say if you enjoy the game?" },
-    { words: ["Let’s", "play", "together"], correct: "Let's play together", prompt: "What can you say to ask someone to play?" },
+    { words: ["Let’s", "play", "together"], correct: "Let’s play together", prompt: "What can you say to ask someone to play?" },
+    { words: ["Don’t", "touch", "that"], correct: "Don’t touch that", prompt: "What do you say when you don't want someone to touch something?" },
 ];
+
 
 function shuffleArray(array: any[]) {
   return array.slice().sort(() => Math.random() - 0.5);
