@@ -4,25 +4,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 
 const audioTracks = [
     {
-        title: "Empty Mind",
-        artist: "Lofi-fi",
-        url: "https://cdn.pixabay.com/audio/2023/04/18/audio_27b2933068.mp3",
-        sourceUrl: "https://pixabay.com/music/lofi-empty-mind-145410/",
-        license: "Pixabay License"
+        title: "Peaceful Mind",
+        artist: "Zakhar Valaha",
+        url: "https://assets.mixkit.co/music/preview/mixkit-peaceful-mind-1165.mp3",
+        sourceUrl: "https://mixkit.co/free-stock-music/ambient/",
+        license: "Mixkit License"
     },
     {
-        title: "Just Relax",
-        artist: "Lesfm",
-        url: "https://cdn.pixabay.com/audio/2022/11/17/audio_8ac9c6a17b.mp3",
-        sourceUrl: "https://pixabay.com/music/beats-just-relax-127201/",
-        license: "Pixabay License"
+        title: "Sleepy Cat",
+        artist: "Alejandro Magaña",
+        url: "https://assets.mixkit.co/music/preview/mixkit-sleepy-cat-135.mp3",
+        sourceUrl: "https://mixkit.co/free-stock-music/ambient/",
+        license: "Mixkit License"
     },
      {
-        title: "Lofi Chill",
-        artist: "FASSounds",
-        url: "https://cdn.pixabay.com/audio/2022/05/27/audio_18c1109935.mp3",
-        sourceUrl: "https://pixabay.com/music/lofi-lofi-chill-111831/",
-        license: "Pixabay License"
+        title: "Just Chill",
+        artist: "Ahjay Stelino",
+        url: "https://assets.mixkit.co/music/preview/mixkit-just-chill-16.mp3",
+        sourceUrl: "https://mixkit.co/free-stock-music/ambient/",
+        license: "Mixkit License"
     }
 ];
 
@@ -42,7 +42,7 @@ export default function CalmingAudioTab() {
                         Your browser does not support the audio element.
                     </audio>
                     <p className="text-xs text-muted-foreground mt-2">
-                        Music from <a href={track.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">Pixabay</a>. License: <strong>{track.license}</strong>
+                        Music from <a href={track.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline">Mixkit</a>. License: <strong>{track.license}</strong>
                     </p>
                 </div>
             ))}
