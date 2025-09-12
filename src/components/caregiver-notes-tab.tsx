@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { ScrollArea } from './ui/scroll-area';
-import { Eye, EyeOff, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, Trash2, KeyRound } from 'lucide-react';
 import { Input } from './ui/input';
 import { Alert, AlertDescription } from './ui/alert';
 
@@ -20,6 +20,7 @@ export default function CaregiverNotesTab() {
   const [newNote, setNewNote] = useState("");
   const [passcode, setPasscode] = useLocalStorage<string | null>('caregiver_passcode', null);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isChangingPasscode, setIsChangingPasscode] = useState(false);
   
   const [inputPasscode, setInputPasscode] = useState('');
   const [confirmPasscode, setConfirmPasscode] = useState('');
@@ -36,12 +37,16 @@ export default function CaregiverNotesTab() {
     }
     setPasscode(inputPasscode);
     setIsUnlocked(true);
+    setIsChangingPasscode(false);
+    setInputPasscode('');
+    setConfirmPasscode('');
     setError('');
   };
   
   const handleUnlock = () => {
     if (inputPasscode === passcode) {
         setIsUnlocked(true);
+        setInputPasscode('');
         setError('');
     } else {
         setError('Incorrect passcode.');
@@ -115,6 +120,37 @@ export default function CaregiverNotesTab() {
     );
   }
 
+  if (isChangingPasscode) {
+    return (
+        <Card className="max-w-md mx-auto">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><KeyRound /> Change Passcode</CardTitle>
+                <CardDescription>Enter a new passcode for your notes.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                 <Input 
+                    type="password"
+                    placeholder="Enter new passcode"
+                    value={inputPasscode}
+                    onChange={(e) => setInputPasscode(e.target.value)}
+                />
+                <Input 
+                    type="password"
+                    placeholder="Confirm new passcode"
+                    value={confirmPasscode}
+                    onChange={(e) => setConfirmPasscode(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSetPasscode()}
+                />
+                {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
+                <div className="flex gap-2">
+                    <Button onClick={handleSetPasscode} className="w-full">Update Passcode</Button>
+                    <Button variant="outline" onClick={() => setIsChangingPasscode(false)} className="w-full">Cancel</Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+  }
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
         <Card>
@@ -132,35 +168,40 @@ export default function CaregiverNotesTab() {
                 <Button onClick={saveNote} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Save Note</Button>
             </CardContent>
         </Card>
-        <Card>
-            <CardHeader>
-                <CardTitle>Previous Notes</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <ScrollArea className="h-96 pr-4">
-                    <div className="space-y-4">
-                        {notes.length > 0 ? (
-                            notes.map((note, index) => (
-                                <div key={index} className="p-3 rounded-lg bg-secondary relative group">
-                                    <p className="text-xs text-muted-foreground">{note.timestamp}</p>
-                                    <p className="mt-1">{note.text}</p>
-                                    <Button 
-                                        variant="ghost" 
-                                        size="icon" 
-                                        className="absolute top-1 right-1 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onClick={() => deleteNote(index)}
-                                    >
-                                        <Trash2 className="h-4 w-4 text-destructive"/>
-                                    </Button>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-muted-foreground">No notes saved yet.</p>
-                        )}
-                    </div>
-                </ScrollArea>
-            </CardContent>
-        </Card>
+        <div className="space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Previous Notes</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ScrollArea className="h-80 pr-4">
+                        <div className="space-y-4">
+                            {notes.length > 0 ? (
+                                notes.map((note, index) => (
+                                    <div key={index} className="p-3 rounded-lg bg-secondary relative group">
+                                        <p className="text-xs text-muted-foreground">{note.timestamp}</p>
+                                        <p className="mt-1">{note.text}</p>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="icon" 
+                                            className="absolute top-1 right-1 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            onClick={() => deleteNote(index)}
+                                        >
+                                            <Trash2 className="h-4 w-4 text-destructive"/>
+                                        </Button>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-muted-foreground">No notes saved yet.</p>
+                            )}
+                        </div>
+                    </ScrollArea>
+                </CardContent>
+            </Card>
+            <Button variant="outline" onClick={() => setIsChangingPasscode(true)} className="w-full">
+                <KeyRound className="mr-2 h-4 w-4" /> Change Passcode
+            </Button>
+        </div>
     </div>
   );
 }
