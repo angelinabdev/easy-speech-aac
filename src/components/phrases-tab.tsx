@@ -115,11 +115,20 @@ export default function PhrasesTab() {
   const [favorites, setFavorites] = useLocalStorage<Favorite[]>('phrases_favorites', []);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useLocalStorage<string | undefined>('selected_voice_uri', undefined);
+  
+  const excludedVoiceNames = [
+    "zarvox", "wobble", "whisper", "trinoids", "shelley", "sandy", 
+    "rocko", "reed", "ralph", "organ", "kathy", "junior", "karen", 
+    "jester", "grandpa", "grandma", "good news", "flo", "eddy", 
+    "cellos", "bubbles", "boing", "bells", "bahh", "bad news", "albert"
+  ];
 
   useEffect(() => {
     const loadVoices = () => {
-      let availableVoices = window.speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en'));
-
+      let availableVoices = window.speechSynthesis.getVoices()
+        .filter(voice => voice.lang.startsWith('en'))
+        .filter(voice => !excludedVoiceNames.some(excluded => voice.name.toLowerCase().includes(excluded)));
+      
       if (availableVoices.length > 0) {
         setVoices(availableVoices);
         if(!selectedVoice || !availableVoices.some(v => v.voiceURI === selectedVoice)) {
@@ -128,9 +137,7 @@ export default function PhrasesTab() {
       }
     };
 
-    // The 'voiceschanged' event is fired when the list of voices is ready
     window.speechSynthesis.onvoiceschanged = loadVoices;
-    // Call it once initially in case the voices are already loaded
     loadVoices();
     
     return () => {
