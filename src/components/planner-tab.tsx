@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Plus, Trash2, Printer, Check, X, GripVertical } from 'lucide-react';
+import { Plus, Trash2, Printer, Check, X, GripVertical, Save, Loader2 } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import {
   DndContext,
@@ -26,9 +26,13 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { ScrollArea } from './ui/scroll-area';
 
 type Activity = { text: string };
 type ScheduledActivity = { id: string; text: string; completed: boolean; startTime: string; endTime: string };
+type SavedSchedule = { id: string; name: string; activities: ScheduledActivity[] };
 
 const defaultActivities: Activity[] = [
   { text: "🪥 Brush Teeth" },
@@ -97,6 +101,10 @@ export default function PlannerTab() {
   const [schedule, setSchedule] = useLocalStorage<ScheduledActivity[]>('planner_schedule_v2', []);
   const [points, setPoints] = useLocalStorage('planner_points', 0);
   const [level, setLevel] = useLocalStorage('planner_level', 1);
+
+  const [savedSchedules, setSavedSchedules] = useLocalStorage<SavedSchedule[]>('planner_saved_schedules', []);
+  const [scheduleName, setScheduleName] = useState("");
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -195,53 +203,82 @@ export default function PlannerTab() {
     }
   }
 
+  const handleSaveSchedule = () => {
+    if (scheduleName.trim() && schedule.length > 0) {
+      const newSavedSchedule: SavedSchedule = {
+        id: Date.now().toString(),
+        name: scheduleName.trim(),
+        activities: schedule
+      };
+      setSavedSchedules([...savedSchedules, newSavedSchedule]);
+      setScheduleName("");
+      setIsSaveDialogOpen(false);
+    }
+  };
+
+  const loadSchedule = (scheduleToLoad: SavedSchedule) => {
+    // A simple reset of points for the new schedule
+    setPoints(0);
+    setLevel(1);
+    setSchedule(scheduleToLoad.activities.map(activity => ({...activity, completed: false})));
+  };
+
+  const deleteSchedule = (id: string) => {
+    setSavedSchedules(savedSchedules.filter(s => s.id !== id));
+  };
+
+
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      <div>
-        <Card>
-            <CardHeader><CardTitle>📅 Daily Planner</CardTitle></CardHeader>
-            <CardContent className="space-y-4">
-                <div className="flex gap-2">
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant="outline">😀</Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-2">
-                            <div className="grid grid-cols-5 gap-2">
-                                {EMOJIS.map(emoji => (
-                                    <Button key={emoji} variant="ghost" size="icon" onClick={() => setCustomActivityInput(prev => prev + emoji)}>{emoji}</Button>
+    <div className="grid gap-6 md:grid-cols-3">
+      <div className="md:col-span-2 grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
+            <div>
+                <Card>
+                    <CardHeader><CardTitle>📅 Daily Planner</CardTitle></CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="flex gap-2">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline">😀</Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-2">
+                                    <div className="grid grid-cols-5 gap-2">
+                                        {EMOJIS.map(emoji => (
+                                            <Button key={emoji} variant="ghost" size="icon" onClick={() => setCustomActivityInput(prev => prev + emoji)}>{emoji}</Button>
+                                        ))}
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                            <Input 
+                                placeholder="Add a custom activity..." 
+                                value={customActivityInput}
+                                onChange={(e) => setCustomActivityInput(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && addCustomActivity()}
+                            />
+                            <Button onClick={addCustomActivity}><Plus className="h-4 w-4"/></Button>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader><CardTitle>🧲 Activities</CardTitle></CardHeader>
+                    <CardContent>
+                        <p className="text-sm text-muted-foreground mb-4">Drag an activity to the schedule.</p>
+                        <ScrollArea className="h-48">
+                            <ul className="space-y-2 pr-4">
+                                {[...defaultActivities, ...customActivities].map((activity, i) => (
+                                    <li key={i} draggable onDragStart={(e) => handleDragStart(e, activity.text)} className="flex items-center p-2 rounded-md bg-secondary cursor-grab active:cursor-grabbing">
+                                    <GripVertical className="h-5 w-5 text-muted-foreground mr-2" /> {activity.text}
+                                    </li>
                                 ))}
-                            </div>
-                        </PopoverContent>
-                    </Popover>
-                    <Input 
-                        placeholder="Add a custom activity..." 
-                        value={customActivityInput}
-                        onChange={(e) => setCustomActivityInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && addCustomActivity()}
-                    />
-                    <Button onClick={addCustomActivity}><Plus className="h-4 w-4"/></Button>
-                </div>
-            </CardContent>
-        </Card>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-            <Card>
-                <CardHeader><CardTitle>🧲 Activities</CardTitle></CardHeader>
-                <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">Drag an activity to the schedule.</p>
-                    <ul className="space-y-2">
-                        {[...defaultActivities, ...customActivities].map((activity, i) => (
-                            <li key={i} draggable onDragStart={(e) => handleDragStart(e, activity.text)} className="flex items-center p-2 rounded-md bg-secondary cursor-grab active:cursor-grabbing">
-                               <GripVertical className="h-5 w-5 text-muted-foreground mr-2" /> {activity.text}
-                            </li>
-                        ))}
-                    </ul>
-                </CardContent>
-            </Card>
+                            </ul>
+                        </ScrollArea>
+                    </CardContent>
+                </Card>
+            </div>
+            
             <Card onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
                 <CardHeader><CardTitle>🗓️ Schedule</CardTitle></CardHeader>
-                <CardContent className="min-h-[200px] border-2 border-dashed border-primary rounded-md p-4 bg-background/50">
+                <CardContent className="min-h-[300px] border-2 border-dashed border-primary rounded-md p-4 bg-background/50">
                     {schedule.length === 0 ? (
                         <p className="text-muted-foreground text-center pt-16">Drop activities here</p>
                     ) : (
@@ -264,9 +301,36 @@ export default function PlannerTab() {
                 </CardContent>
             </Card>
         </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <Dialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen}>
+                <DialogTrigger asChild>
+                    <Button className="w-full" disabled={schedule.length === 0}><Save className="h-4 w-4 mr-2" />Save Schedule</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Save Current Schedule</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4 space-y-2">
+                        <label htmlFor="schedule-name">Schedule Name</label>
+                        <Input 
+                            id="schedule-name"
+                            placeholder="e.g., Morning Routine"
+                            value={scheduleName}
+                            onChange={e => setScheduleName(e.target.value)}
+                        />
+                    </div>
+                    <DialogFooter>
+                        <Button onClick={handleSaveSchedule} disabled={!scheduleName.trim()}>Save</Button>
+                        <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            <Button variant="destructive" onClick={clearSchedule} className="w-full"><Trash2 className="h-4 w-4 mr-2" />Clear Schedule</Button>
+            <Button onClick={printSchedule} className="w-full bg-accent text-accent-foreground hover:bg-accent/90"><Printer className="h-4 w-4 mr-2" />Print Schedule</Button>
+        </div>
       </div>
 
-      <div>
+      <div className="space-y-6">
         <Card>
             <CardHeader><CardTitle>🏆 My Progress</CardTitle></CardHeader>
             <CardContent className="space-y-4">
@@ -283,10 +347,44 @@ export default function PlannerTab() {
                 </div>
             </CardContent>
         </Card>
-        <div className="flex gap-2 mt-4">
-            <Button variant="destructive" onClick={clearSchedule} className="w-full"><Trash2 className="h-4 w-4 mr-2" />Clear Schedule</Button>
-            <Button onClick={printSchedule} className="w-full bg-accent text-accent-foreground hover:bg-accent/90"><Printer className="h-4 w-4 mr-2" />Print Schedule</Button>
-        </div>
+        <Card>
+            <CardHeader><CardTitle>🗂️ Saved Schedules</CardTitle></CardHeader>
+            <CardContent>
+                <ScrollArea className="h-64">
+                    {savedSchedules.length > 0 ? (
+                        <div className="space-y-2 pr-4">
+                            {savedSchedules.map(saved => (
+                                <div key={saved.id} className="p-2 bg-secondary rounded-md flex items-center justify-between">
+                                    <span className="font-medium">{saved.name}</span>
+                                    <div className="flex gap-1">
+                                        <Button size="sm" variant="ghost" onClick={() => loadSchedule(saved)}>Load</Button>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button size="icon" variant="ghost" className="h-8 w-8"><Trash2 className="h-4 w-4 text-destructive"/></Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This will permanently delete the "{saved.name}" schedule. This action cannot be undone.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => deleteSchedule(saved.id)}>Delete</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-muted-foreground text-center">No schedules saved yet.</p>
+                    )}
+                </ScrollArea>
+            </CardContent>
+        </Card>
       </div>
     </div>
   );
