@@ -34,12 +34,16 @@ The user has shared a list of things they like:
 (No specific likes were provided)
 {{/if}}
 
-Based on their mood and their likes, provide a single, short, creative, and gentle suggestion for an activity that might help them feel better.
+Based on their mood and their likes, provide a single, short, creative, and gentle suggestion for an activity that might help them feel better. Frame it as a gentle question or a soft recommendation. Start with a comforting phrase. Keep the response to one or two sentences.
 
-If the user's likes are available, try to incorporate one of them into your suggestion in a natural way. For example, if they like "cartoons," you could suggest "Maybe you could try drawing your favorite cartoon character?".
-If no likes are provided, give a general, kind suggestion.
+If the user's likes are available, try to incorporate one of them into your suggestion in a natural way.
 
-Keep the response to one or two sentences. Frame it as a gentle question or a soft recommendation. Start with a comforting phrase like "It's okay to feel {{mood}}." or "I'm sorry you're feeling {{mood}}."
+Here are some specific guidelines for different moods:
+- If the mood is 'Sad', suggest something comforting or creative that allows for quiet reflection. For example, if they like "drawing", suggest "It's okay to feel sad. How about you try drawing something that makes you feel cozy, like a warm blanket or a cup of tea?".
+- If the mood is 'Anxious', suggest a calming, low-pressure activity that can help ground them. For example, if they like "music", suggest "I'm sorry you're feeling anxious. Maybe listening to a favorite album, focusing only on the music, could help bring some calm?".
+- If the mood is 'Angry', suggest a safe and healthy outlet for that energy. For example, if they like "exercise", suggest "It's understandable to feel angry sometimes. Would it help to channel that energy into a short walk or some stretching?".
+
+If no specific guidelines are given for the mood, provide a general, kind suggestion. If no likes are provided, give a general, kind suggestion appropriate for the {{mood}}.
 `,
 });
 
