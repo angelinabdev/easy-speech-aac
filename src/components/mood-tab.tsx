@@ -21,12 +21,12 @@ const MOODS = [
 ];
 
 const moodTips: Record<string, string> = {
-  Happy: "It's wonderful you're feeling happy! Embrace this feeling. Maybe spend some time on a favorite hobby, watch a comfort movie, or share your joy with someone you trust. Let this positive energy fill you up.",
-  Sad: "It's completely okay to feel sad. Your feelings are valid. Try wrapping yourself in a warm blanket, listening to some gentle music, or holding a comfort object. You don't have to rush this feeling away; just be gentle with yourself.",
-  Angry: "Feeling angry is a powerful emotion. It's okay to feel this way. Try taking slow, deep breaths, counting to ten, or squeezing a stress ball if you have one. If you can, find a quiet space to let the feeling pass safely. You are in control.",
-  Anxious: "Anxiety can feel very overwhelming. Let's try to ground ourselves. Focus on your breath—in for four seconds, out for six. Feel your feet on the floor. Name five things you can see around you. You are safe in this present moment.",
-  Calm: "Feeling calm is a peaceful state. Enjoy it. This is a great time to do something gentle that you love, like reading a book, listening to an audiobook, or simply resting in a quiet space to recharge your energy.",
-  Tired: "Your body and mind are telling you it's time to rest, and that's important. Find a comfortable spot for a short nap, listen to some calming sounds, or just close your eyes for a few minutes. It's okay to take a break."
+  Happy: "That's wonderful! Keep up the good work and continue what you are doing. Try something fun and relaxing that focuses on your special interests.",
+  Sad: "It's okay to feel sad. Try comforting activities, create a calm space, practice breathing exercises, or talk to someone you trust. Remember, you will be okay!",
+  Angry: "It's normal to feel angry. Calm yourself by identifying triggers, creating a predictable environment, counting to 10, or using breathing exercises. Find support if needed.",
+  Anxious: "Focus on your breath and stay in a calm, familiar setting. Use sensory objects or grounding techniques to help you feel more present and reduce stress.",
+  Calm: "Enjoy this moment. Do something relaxing and fun! Sensory objects and peaceful settings can help you recharge and maintain calm.",
+  Tired: "Take a well-deserved rest. Step away from the screen, have a short nap, or listen to calming music to refresh your mind."
 };
 
 
