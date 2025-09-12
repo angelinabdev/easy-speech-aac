@@ -15,7 +15,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  rectSortingStrategy
+  horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
@@ -55,7 +55,6 @@ const SENTENCES = [
     { words: ["We", "are", "tired"], correct: "We are tired", prompt: "Drag the words to form the sentence about how we feel." },
 ];
 
-
 function shuffleArray(array: any[]) {
   return array.slice().sort(() => Math.random() - 0.5);
 }
@@ -86,18 +85,16 @@ function SentenceBuilderGame() {
     const [level, setLevel] = useLocalStorage('planner_level', 1);
 
     const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
-    const [wordBank, setWordBank] = useState<string[]>([]);
-    const [sentenceBox, setSentenceBox] = useState<string[]>([]);
+    const [items, setItems] = useState<string[]>([]);
     const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
 
     const currentSentenceDef = SENTENCES[currentSentenceIndex];
 
     useEffect(() => {
-        setWordBank(shuffleArray(currentSentenceDef.words).map((word, index) => `${word}_${index}`));
-        setSentenceBox([]);
+        setItems(shuffleArray(currentSentenceDef.words).map((word, index) => `${word}_${index}`));
         setFeedback(null);
     }, [currentSentenceIndex, currentSentenceDef]);
-
+    
     const expForNextLevel = level * 100;
     const currentExp = points - ((level - 1) * 100);
     const progress = Math.min(100, (currentExp / expForNextLevel) * 100);
@@ -116,7 +113,7 @@ function SentenceBuilderGame() {
     );
 
     const checkSentence = () => {
-        const userAnswer = sentenceBox.map(wordId => wordId.split('_')[0]).join(' ');
+        const userAnswer = items.map(wordId => wordId.split('_')[0]).join(' ');
         if (userAnswer === currentSentenceDef.correct) {
             setFeedback('correct');
             setPoints(points + 20);
@@ -129,61 +126,15 @@ function SentenceBuilderGame() {
         }
     };
     
-    function findContainer(id: string) {
-        if (wordBank.includes(id)) {
-            return "word-bank";
-        }
-        if (sentenceBox.includes(id)) {
-            return "sentence-box";
-        }
-        return null;
-    }
-    
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
     
-        if (!over) return;
-    
-        const activeId = active.id as string;
-        const overId = over.id as string;
-    
-        if (activeId === overId) return;
-    
-        const activeContainer = findContainer(activeId);
-        const overContainer = over.id === 'sentence-box-droppable' ? 'sentence-box' : findContainer(overId);
-    
-        if (!activeContainer || !overContainer) return;
-    
-        if (activeContainer === overContainer) {
-            // Reordering within the same container
-            if (activeContainer === 'word-bank') {
-                setWordBank(items => {
-                    const oldIndex = items.indexOf(activeId);
-                    const newIndex = items.indexOf(overId);
-                    return arrayMove(items, oldIndex, newIndex);
-                });
-            } else if (activeContainer === 'sentence-box') {
-                setSentenceBox(items => {
-                    const oldIndex = items.indexOf(activeId);
-                    const newIndex = items.indexOf(overId);
-                    return arrayMove(items, oldIndex, newIndex);
-                });
-            }
-        } else {
-            // Moving between containers
-            if (activeContainer === 'word-bank' && overContainer === 'sentence-box') {
-                setWordBank(prev => prev.filter(id => id !== activeId));
-                 setSentenceBox(prev => {
-                    const overIndex = sentenceBox.includes(overId) ? prev.indexOf(overId) : prev.length;
-                    return [...prev.slice(0, overIndex), activeId, ...prev.slice(overIndex)];
-                });
-            } else if (activeContainer === 'sentence-box' && overContainer === 'word-bank') {
-                 setSentenceBox(prev => prev.filter(id => id !== activeId));
-                setWordBank(prev => {
-                     const overIndex = wordBank.includes(overId) ? prev.indexOf(overId) : prev.length;
-                    return [...prev.slice(0, overIndex), activeId, ...prev.slice(overIndex)];
-                });
-            }
+        if (active.id !== over?.id) {
+          setItems((currentItems) => {
+            const oldIndex = currentItems.indexOf(active.id as string);
+            const newIndex = currentItems.indexOf(over!.id as string);
+            return arrayMove(currentItems, oldIndex, newIndex);
+          });
         }
     };
     
@@ -211,19 +162,10 @@ function SentenceBuilderGame() {
                     <AlertTitle>Instructions</AlertTitle>
                     <AlertDescription>{currentSentenceDef.prompt}</AlertDescription>
                 </Alert>
-                <SortableContext items={sentenceBox} strategy={rectSortingStrategy}>
-                    <div id="sentence-box-droppable" className="p-4 border-2 border-dashed rounded-lg min-h-[100px] flex items-center justify-center gap-2 flex-wrap bg-background/50">
-                        {sentenceBox.length > 0 ? (
-                           sentenceBox.map(wordId => <SortableItem key={wordId} id={wordId} />)
-                        ) : (
-                           <div className="text-muted-foreground select-none">Drag words here to build the sentence.</div>
-                        )}
-                    </div>
-                </SortableContext>
                 
-                <SortableContext items={wordBank} strategy={rectSortingStrategy}>
+                <SortableContext items={items} strategy={horizontalListSortingStrategy}>
                     <div id="word-bank-droppable" className="p-4 bg-secondary rounded-lg min-h-[100px] flex items-center justify-center gap-2 flex-wrap">
-                         {wordBank.map(wordId => <SortableItem key={wordId} id={wordId} />)}
+                         {items.map(wordId => <SortableItem key={wordId} id={wordId} />)}
                     </div>
                 </SortableContext>
 
