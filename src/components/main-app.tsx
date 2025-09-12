@@ -33,7 +33,6 @@ const TABS = [
 
 export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [showNotes, setShowNotes] = useState(false);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -46,7 +45,7 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
       case "mood":
         return <MoodTab />;
       case "notes":
-        return <CaregiverNotesTab showNotes={showNotes} setShowNotes={setShowNotes} />;
+        return <CaregiverNotesTab />;
       case "resources":
         return <ResourcesTab />;
       case "contact":
@@ -56,12 +55,7 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
     }
   };
 
-  const filteredTabs = TABS.filter(tab => {
-    if (tab.id === 'notes') {
-      return role === 'caregiver' && showNotes;
-    }
-    return !tab.roles || tab.roles.includes(role!);
-  });
+  const filteredTabs = TABS.filter(tab => !tab.roles || tab.roles.includes(role!));
 
   return (
     <>
@@ -71,11 +65,6 @@ export default function MainApp({ role, onLogout, onRoleSwitch }: MainAppProps) 
           <p className="text-muted-foreground">
             Welcome back! You are logged in as a{" "}
             <span className="font-semibold text-primary">{role}</span>.
-            {role === 'caregiver' && !showNotes && (
-              <Button variant="link" onClick={() => setActiveTab('notes')}>
-                Access Notes
-              </Button>
-            )}
           </p>
         </div>
         

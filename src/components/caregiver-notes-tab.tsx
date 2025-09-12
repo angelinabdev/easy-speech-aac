@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { ScrollArea } from './ui/scroll-area';
-import { EyeOff, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, Trash2 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Alert, AlertDescription } from './ui/alert';
 
@@ -15,22 +15,33 @@ type Note = {
     timestamp: string;
 }
 
-interface CaregiverNotesTabProps {
-    showNotes: boolean;
-    setShowNotes: (show: boolean) => void;
-}
-
-const PASSCODE = "1234";
-
-export default function CaregiverNotesTab({ showNotes, setShowNotes }: CaregiverNotesTabProps) {
+export default function CaregiverNotesTab() {
   const [notes, setNotes] = useLocalStorage<Note[]>('caregiver_notes', []);
   const [newNote, setNewNote] = useState("");
-  const [passcode, setPasscode] = useState('');
+  const [passcode, setPasscode] = useLocalStorage<string | null>('caregiver_passcode', null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  
+  const [inputPasscode, setInputPasscode] = useState('');
+  const [confirmPasscode, setConfirmPasscode] = useState('');
   const [error, setError] = useState('');
 
-  const handlePasscodeSubmit = () => {
-    if (passcode === PASSCODE) {
-        setShowNotes(true);
+  const handleSetPasscode = () => {
+    if (inputPasscode.length < 4) {
+      setError("Passcode must be at least 4 characters.");
+      return;
+    }
+    if (inputPasscode !== confirmPasscode) {
+        setError("Passcodes do not match.");
+        return;
+    }
+    setPasscode(inputPasscode);
+    setIsUnlocked(true);
+    setError('');
+  };
+  
+  const handleUnlock = () => {
+    if (inputPasscode === passcode) {
+        setIsUnlocked(true);
         setError('');
     } else {
         setError('Incorrect passcode.');
@@ -54,7 +65,35 @@ export default function CaregiverNotesTab({ showNotes, setShowNotes }: Caregiver
     setNotes(updatedNotes);
   }
 
-  if (!showNotes) {
+  if (!isUnlocked) {
+    if (passcode === null) {
+      return (
+        <Card className="max-w-md mx-auto">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Eye /> Set Passcode</CardTitle>
+                <CardDescription>Create a passcode to secure your notes. This will be required to view them in the future.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <Input 
+                    type="password"
+                    placeholder="Enter new passcode"
+                    value={inputPasscode}
+                    onChange={(e) => setInputPasscode(e.target.value)}
+                />
+                <Input 
+                    type="password"
+                    placeholder="Confirm new passcode"
+                    value={confirmPasscode}
+                    onChange={(e) => setConfirmPasscode(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSetPasscode()}
+                />
+                {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
+                <Button onClick={handleSetPasscode} className="w-full">Set Passcode</Button>
+            </CardContent>
+        </Card>
+      );
+    }
+
     return (
         <Card className="max-w-md mx-auto">
             <CardHeader>
@@ -65,15 +104,15 @@ export default function CaregiverNotesTab({ showNotes, setShowNotes }: Caregiver
                 <Input 
                     type="password"
                     placeholder="Enter passcode"
-                    value={passcode}
-                    onChange={(e) => setPasscode(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handlePasscodeSubmit()}
+                    value={inputPasscode}
+                    onChange={(e) => setInputPasscode(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleUnlock()}
                 />
                 {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
-                <Button onClick={handlePasscodeSubmit} className="w-full">Unlock Notes</Button>
+                <Button onClick={handleUnlock} className="w-full">Unlock Notes</Button>
             </CardContent>
         </Card>
-    )
+    );
   }
 
   return (
