@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Flame } from "lucide-react";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 type Role = "user" | "caregiver" | null;
 
@@ -19,6 +21,25 @@ const features = [
     "Listen to calming audio to relax when overwhelmed.",
     "Caregivers can track mood history, analyze patterns, and take helpful notes."
 ];
+
+function StreakCard() {
+    const [streak] = useLocalStorage('dailyStreak', 0);
+    
+    return (
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium">Daily Streak</CardTitle>
+                <Flame className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">{streak} Day{streak !== 1 ? 's' : ''}</div>
+                <p className="text-xs text-muted-foreground">
+                    You've logged in for {streak} day{streak !== 1 ? 's' : ''} in a row. Keep it up!
+                </p>
+            </CardContent>
+        </Card>
+    );
+}
 
 
 export default function DashboardTab({ role, onRoleSwitch }: DashboardTabProps) {
@@ -41,6 +62,8 @@ export default function DashboardTab({ role, onRoleSwitch }: DashboardTabProps) 
       </Card>
       
       <div className="space-y-8">
+        <StreakCard />
+
         <Card>
             <CardHeader>
                 <CardTitle>Our Mission</CardTitle>

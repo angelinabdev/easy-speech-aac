@@ -17,6 +17,26 @@ export default function Home() {
     if (storedRole) {
       setRole(storedRole);
       setIsLoggedIn(true);
+
+      // Streak Logic
+      const today = new Date().toDateString();
+      const lastLoginDate = localStorage.getItem('lastLoginDate');
+      let currentStreak = parseInt(localStorage.getItem('dailyStreak') || '0', 10);
+
+      if (lastLoginDate !== today) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        if (lastLoginDate === yesterday.toDateString()) {
+          // Consecutive day
+          currentStreak++;
+        } else {
+          // Missed a day or first login
+          currentStreak = 1;
+        }
+        localStorage.setItem('dailyStreak', currentStreak.toString());
+        localStorage.setItem('lastLoginDate', today);
+      }
     }
   }, []);
 
@@ -25,6 +45,11 @@ export default function Home() {
       localStorage.setItem("userRole", selectedRole);
       setRole(selectedRole);
       setIsLoggedIn(true);
+
+      // Reset/start streak on new login
+      const today = new Date().toDateString();
+      localStorage.setItem('dailyStreak', '1');
+      localStorage.setItem('lastLoginDate', today);
     }
   };
 
