@@ -28,7 +28,7 @@ export async function suggestMoodActivities(mood: MoodInput): Promise<MoodActivi
 
 const suggestMoodActivitiesPrompt = ai.definePrompt({
   name: 'suggestMoodActivitiesPrompt',
-  input: {schema: z.string()},
+  input: {schema: z.object({mood: MoodInputSchema})},
   output: {schema: MoodActivitySuggestionSchema},
   prompt: `Based on the user's mood: {{mood}}, suggest one activity and one calming audio to improve their well-being. Be creative and empathetic.
 
@@ -51,7 +51,7 @@ const suggestMoodActivitiesFlow = ai.defineFlow(
     outputSchema: MoodActivitySuggestionSchema,
   },
   async mood => {
-    const {output} = await suggestMoodActivitiesPrompt(mood);
+    const {output} = await suggestMoodActivitiesPrompt({mood});
     return output!;
   }
 );
