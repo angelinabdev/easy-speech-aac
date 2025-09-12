@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Plus, Trash2, Printer, Check, X, GripVertical, Save } from 'lucide-react';
+import { Plus, Trash2, Printer, Check, X, GripVertical, Save, Bell } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import {
   DndContext,
@@ -29,6 +29,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import { ScrollArea } from './ui/scroll-area';
+import { useToast } from '@/hooks/use-toast';
 
 type Activity = { text: string };
 type ScheduledActivity = { id: string; text: string; completed: boolean; startTime: string; endTime: string };
@@ -101,6 +102,7 @@ export default function PlannerTab() {
   const [schedule, setSchedule] = useLocalStorage<ScheduledActivity[]>('planner_schedule_v2', []);
   const [points, setPoints] = useLocalStorage('planner_points', 0);
   const [level, setLevel] = useLocalStorage('planner_level', 1);
+  const { toast } = useToast();
 
   const [savedSchedules, setSavedSchedules] = useLocalStorage<SavedSchedule[]>('planner_saved_schedules', []);
   const [scheduleName, setScheduleName] = useState("");
@@ -226,7 +228,6 @@ export default function PlannerTab() {
   };
 
   const loadSchedule = (scheduleToLoad: SavedSchedule) => {
-    // A simple reset of points for the new schedule
     setPoints(0);
     setLevel(1);
     setSchedule(scheduleToLoad.activities.map(activity => ({...activity, completed: false})));
@@ -234,6 +235,37 @@ export default function PlannerTab() {
 
   const deleteSchedule = (id: string) => {
     setSavedSchedules(savedSchedules.filter(s => s.id !== id));
+  };
+
+  const handleSetReminder = () => {
+    if (!('Notification' in window)) {
+      toast({ variant: "destructive", title: "Notifications not supported", description: "This browser does not support desktop notifications." });
+      return;
+    }
+
+    if (Notification.permission === 'granted') {
+      scheduleNotification();
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          scheduleNotification();
+        } else {
+           toast({ variant: "destructive", title: "Permission Denied", description: "You have denied notification permissions." });
+        }
+      });
+    } else {
+       toast({ variant: "destructive", title: "Permission Denied", description: "Notification permissions are denied. Please enable them in your browser settings." });
+    }
+  };
+
+  const scheduleNotification = () => {
+    toast({ title: "Reminder Set!", description: "You will be reminded to check your planner in 2 hours." });
+    setTimeout(() => {
+      new Notification("Time to check your planner!", {
+        body: "Don't forget to review your daily schedule and mark your progress.",
+        icon: "/favicon.ico" 
+      });
+    }, 2 * 60 * 60 * 1000); // 2 hours
   };
 
   return (
@@ -319,10 +351,10 @@ export default function PlannerTab() {
                 </CardContent>
             </Card>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
             <Dialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen}>
                 <DialogTrigger asChild>
-                    <Button className="w-full" disabled={schedule.length === 0}><Save className="h-4 w-4 mr-2" />Save Schedule</Button>
+                    <Button className="w-full" disabled={schedule.length === 0}><Save className="h-4 w-4 mr-2" />Save</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
@@ -343,8 +375,9 @@ export default function PlannerTab() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            <Button variant="destructive" onClick={clearSchedule} className="w-full"><Trash2 className="h-4 w-4 mr-2" />Clear Schedule</Button>
-            <Button onClick={printSchedule} className="w-full bg-accent text-accent-foreground hover:bg-accent/90"><Printer className="h-4 w-4 mr-2" />Print Schedule</Button>
+             <Button variant="outline" onClick={handleSetReminder} className="w-full"><Bell className="h-4 w-4 mr-2" />Set Reminder</Button>
+            <Button variant="destructive" onClick={clearSchedule} className="w-full"><Trash2 className="h-4 w-4 mr-2" />Clear</Button>
+            <Button onClick={printSchedule} className="w-full bg-accent text-accent-foreground hover:bg-accent/90"><Printer className="h-4 w-4 mr-2" />Print</Button>
         </div>
       </div>
 
@@ -407,3 +440,5 @@ export default function PlannerTab() {
     </div>
   );
 }
+
+    
