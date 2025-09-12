@@ -196,8 +196,9 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
     }, [shuffledSentences, onGameComplete]);
 
     useEffect(() => {
-        loadSentence(0);
-    }, [loadSentence]);
+        loadSentence(currentSentenceIndex);
+    }, [loadSentence, currentSentenceIndex]);
+
 
     const currentSentenceDef = shuffledSentences[currentSentenceIndex];
     
@@ -225,7 +226,6 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
             setPoints(points + 20);
             setTimeout(() => {
                 setCurrentSentenceIndex((prevIndex) => prevIndex + 1);
-                loadSentence(currentSentenceIndex + 1);
             }, 1500);
         } else {
             setFeedback('incorrect');
@@ -276,6 +276,9 @@ function SentenceBuilderGame({ onGameComplete }: { onGameComplete: () => void })
                         </div>
                     </CardContent>
                 </Card>
+                <div className="text-center text-muted-foreground font-semibold">
+                    Sentences Completed: {currentSentenceIndex} / {shuffledSentences.length}
+                </div>
                 <Alert>
                     <Info className="h-4 w-4" />
                     <AlertTitle>Instructions</AlertTitle>
