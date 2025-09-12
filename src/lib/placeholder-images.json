@@ -22,8 +22,8 @@
     {
       "id": "dog",
       "description": "Dog",
-      "imageUrl": "https://picsum.photos/seed/dog/400/300",
-      "imageHint": "golden retriever"
+      "imageUrl": "/images/dog.png",
+      "imageHint": "brown dog"
     },
     {
       "id": "cat",
