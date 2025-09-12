@@ -128,6 +128,10 @@ export default function PlannerTab() {
       setCustomActivityInput("");
     }
   };
+
+  const deleteCustomActivity = (text: string) => {
+    setCustomActivities(customActivities.filter(activity => activity.text !== text));
+  };
   
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>, text: string) => {
     e.dataTransfer.setData("text/plain", text);
@@ -269,9 +273,19 @@ export default function PlannerTab() {
                         <p className="text-sm text-muted-foreground mb-4">Drag an activity to the schedule.</p>
                         <ScrollArea className="h-48">
                             <ul className="space-y-2 pr-4">
-                                {allActivities.map((activity, i) => (
-                                    <li key={i} draggable onDragStart={(e) => handleDragStart(e, activity.text)} className="flex items-center p-2 rounded-md bg-secondary cursor-grab active:cursor-grabbing">
+                                {defaultActivities.map((activity, i) => (
+                                    <li key={`default-${i}`} draggable onDragStart={(e) => handleDragStart(e, activity.text)} className="flex items-center p-2 rounded-md bg-secondary cursor-grab active:cursor-grabbing">
                                         <GripVertical className="h-5 w-5 text-muted-foreground mr-2" /> {activity.text}
+                                    </li>
+                                ))}
+                                {customActivities.map((activity, i) => (
+                                    <li key={`custom-${i}`} draggable onDragStart={(e) => handleDragStart(e, activity.text)} className="group flex items-center justify-between p-2 rounded-md bg-secondary cursor-grab active:cursor-grabbing">
+                                        <div className="flex items-center">
+                                          <GripVertical className="h-5 w-5 text-muted-foreground mr-2" /> {activity.text}
+                                        </div>
+                                        <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100" onClick={() => deleteCustomActivity(activity.text)}>
+                                          <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
                                     </li>
                                 ))}
                             </ul>
