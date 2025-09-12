@@ -83,8 +83,8 @@ const playNoise = (duration: number) => {
 };
 
 const SOUNDS = [
-    { name: "Yes", icon: ThumbsUp, action: () => playTone(523.25, 659.25, 0.3) },
-    { name: "No", icon: ThumbsDown, action: () => playTone(349.23, 261.63, 0.4) },
+    { name: "Yes", icon: ThumbsUp, action: () => speakText("Yes") },
+    { name: "No", icon: ThumbsDown, action: () => speakText("No") },
     { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
     { name: "Okay", icon: Check, action: () => speakText("Okay") },
 ];
