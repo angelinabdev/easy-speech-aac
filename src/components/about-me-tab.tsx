@@ -7,7 +7,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
-import { Trash2, User, Phone, Plus, Clipboard } from 'lucide-react';
+import { Trash2, User, Phone, Plus, Clipboard, Printer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 type Contact = { id: string; name: string; relation: string; phone: string };
@@ -56,31 +56,98 @@ export default function AboutMeTab() {
     setItems(items.filter(item => item.id !== id));
   };
   
-  const handleShare = () => {
-    let shareText = `--- ABOUT ME ---\n`;
-    shareText += `Name: ${name || 'Not specified'}\n\n`;
-    shareText += `--- EMERGENCY CONTACTS ---\n`;
+  const getShareableText = () => {
+    let text = `--- ABOUT ME ---\n`;
+    text += `Name: ${name || 'Not specified'}\n\n`;
+    text += `--- EMERGENCY CONTACTS ---\n`;
     if (contacts.length > 0) {
         contacts.forEach(c => {
-            shareText += `- ${c.name} (${c.relation}): ${c.phone}\n`;
+            text += `- ${c.name} (${c.relation}): ${c.phone}\n`;
         });
     } else {
-        shareText += 'No contacts listed.\n';
+        text += 'No contacts listed.\n';
     }
-    shareText += `\n--- ALLERGIES & MEDICAL NOTES ---\n`;
-    shareText += `${medical || 'No notes.'}\n\n`;
-    shareText += `--- COMMUNICATION STYLE ---\n`;
-    shareText += `${communication || 'Not specified.'}\n\n`;
-    shareText += `--- LIKES ---\n`;
-    shareText += likes.length > 0 ? likes.map(l => `- ${l.text}`).join('\n') : 'No likes listed.';
-    shareText += `\n\n--- DISLIKES ---\n`;
-    shareText += dislikes.length > 0 ? dislikes.map(d => `- ${d.text}`).join('\n') : 'No dislikes listed.';
+    text += `\n--- ALLERGIES & MEDICAL NOTES ---\n`;
+    text += `${medical || 'No notes.'}\n\n`;
+    text += `--- COMMUNICATION STYLE ---\n`;
+    text += `${communication || 'Not specified.'}\n\n`;
+    text += `--- LIKES ---\n`;
+    text += likes.length > 0 ? likes.map(l => `- ${l.text}`).join('\n') : 'No likes listed.';
+    text += `\n\n--- DISLIKES ---\n`;
+    text += dislikes.length > 0 ? dislikes.map(d => `- ${d.text}`).join('\n') : 'No dislikes listed.';
+    return text;
+  }
 
+  const handleShare = () => {
+    const shareText = getShareableText();
     navigator.clipboard.writeText(shareText);
     toast({
         title: "Information Copied!",
         description: "Your 'About Me' info has been copied to the clipboard.",
     });
+  };
+
+  const handlePrint = () => {
+    const printWindow = window.open('', '', 'height=800,width=800');
+    if (printWindow) {
+        printWindow.document.write('<html><head><title>About Me</title>');
+        printWindow.document.write('<style>body { font-family: sans-serif; line-height: 1.6; } h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; } ul { padding-left: 20px; } .section { margin-bottom: 20px; }</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(`<h1>About ${name || 'Me'}</h1>`);
+        
+        printWindow.document.write('<div class="section">');
+        printWindow.document.write(`<h2>Basic Information</h2><p><strong>Name:</strong> ${name || 'Not specified'}</p>`);
+        printWindow.document.write('</div>');
+        
+        printWindow.document.write('<div class="section">');
+        printWindow.document.write('<h2>Allergies & Medical Notes</h2>');
+        printWindow.document.write(`<p>${medical ? medical.replace(/\n/g, '<br>') : 'No notes.'}</p>`);
+        printWindow.document.write('</div>');
+
+        printWindow.document.write('<div class="section">');
+        printWindow.document.write('<h2>Communication Style</h2>');
+        printWindow.document.write(`<p>${communication ? communication.replace(/\n/g, '<br>') : 'Not specified.'}</p>`);
+        printWindow.document.write('</div>');
+
+        printWindow.document.write('<div class="section">');
+        printWindow.document.write('<h2>Emergency Contacts</h2>');
+        if (contacts.length > 0) {
+            printWindow.document.write('<ul>');
+            contacts.forEach(c => {
+                printWindow.document.write(`<li><strong>${c.name}</strong> (${c.relation}): ${c.phone}</li>`);
+            });
+            printWindow.document.write('</ul>');
+        } else {
+            printWindow.document.write('<p>No contacts listed.</p>');
+        }
+        printWindow.document.write('</div>');
+        
+        printWindow.document.write('<div class="section">');
+        printWindow.document.write('<h2>Likes</h2>');
+        if (likes.length > 0) {
+            printWindow.document.write('<ul>');
+            likes.forEach(l => printWindow.document.write(`<li>${l.text}</li>`));
+            printWindow.document.write('</ul>');
+        } else {
+            printWindow.document.write('<p>No likes listed.</p>');
+        }
+        printWindow.document.write('</div>');
+
+        printWindow.document.write('<div class="section">');
+        printWindow.document.write('<h2>Dislikes</h2>');
+        if (dislikes.length > 0) {
+            printWindow.document.write('<ul>');
+            dislikes.forEach(d => printWindow.document.write(`<li>${d.text}</li>`));
+            printWindow.document.write('</ul>');
+        } else {
+            printWindow.document.write('<p>No dislikes listed.</p>');
+        }
+        printWindow.document.write('</div>');
+
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
   };
 
   return (
@@ -90,7 +157,10 @@ export default function AboutMeTab() {
           <h2 className="text-2xl font-bold">About Me</h2>
           <p className="text-muted-foreground">A safe place for important personal information. All data is stored on this device only.</p>
         </div>
-        <Button onClick={handleShare}><Clipboard className="mr-2 h-4 w-4"/> Share My Info</Button>
+        <div className="flex gap-2">
+            <Button onClick={handleShare} variant="outline"><Clipboard className="mr-2 h-4 w-4"/> Share</Button>
+            <Button onClick={handlePrint}><Printer className="mr-2 h-4 w-4"/> Print</Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
