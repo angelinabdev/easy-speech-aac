@@ -1,8 +1,10 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
 import LoginForm from "@/components/login-form";
 import MainApp from "@/components/main-app";
+import process from 'process';
 
 type Role = "user" | "caregiver" | null;
 
@@ -10,6 +12,9 @@ export default function Home() {
   const [role, setRole] = useState<Role>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  
+  // This line gets the project path from the server.
+  const projectPath = process.cwd();
 
   useEffect(() => {
     setIsClient(true);
@@ -75,7 +80,7 @@ export default function Home() {
       {isLoggedIn && role ? (
         <MainApp role={role} onLogout={handleLogout} onRoleSwitch={handleRoleSwitch} />
       ) : (
-        <LoginForm onLogin={handleLogin} />
+        <LoginForm onLogin={handleLogin} path={projectPath} />
       )}
     </div>
   );

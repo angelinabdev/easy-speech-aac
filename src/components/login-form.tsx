@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -6,14 +7,17 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Folder } from "lucide-react";
 
 type Role = "user" | "caregiver" | null;
 
 interface LoginFormProps {
   onLogin: (role: Role) => void;
+  path?: string;
 }
 
-export default function LoginForm({ onLogin }: LoginFormProps) {
+export default function LoginForm({ onLogin, path }: LoginFormProps) {
   const [role, setRole] = useState<string>("");
 
   const handleLogin = () => {
@@ -27,6 +31,17 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-md shadow-2xl">
+        {path && (
+            <div className="p-4 border-b border-dashed">
+                 <Alert variant="default" className="bg-blue-50 dark:bg-blue-900/30 border-blue-500">
+                    <Folder className="h-4 w-4" />
+                    <AlertTitle className="font-bold">Your Project Folder Is Here:</AlertTitle>
+                    <AlertDescription className="text-lg font-mono break-all">
+                        {path}
+                    </AlertDescription>
+                </Alert>
+            </div>
+        )}
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center text-primary-foreground">Welcome to Easy Speech AAC</CardTitle>
           <CardDescription className="text-center text-muted-foreground">Please select your role to continue.</CardDescription>
