@@ -8,11 +8,8 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Trash2, Printer, Lightbulb } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { getSuggestion } from '@/ai/flows/suggestion-flow';
-import type { SuggestionInput } from '@/ai/flows/suggestion.ts-types';
 
 type MoodEntry = { mood: string; timestamp: string, id: string };
-type ListItem = { id: string; text: string };
 
 const MOODS = [
   { name: 'Happy', emoji: '😊', color: '#4ade80' },
@@ -32,45 +29,16 @@ const moodTips = {
   Tired: "Take a well-deserved rest. Step away from the screen, have a short nap, or listen to calming music to refresh your mind."
 };
 
+
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
   const [activeTip, setActiveTip] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
 
-  const [likes] = useLocalStorage<ListItem[]>('about_me_likes', []);
-  const [dislikes] = useLocalStorage<ListItem[]>('about_me_dislikes', []);
-  const [communication] = useLocalStorage('about_me_communication', '');
-
-
-  const handleMoodSelect = async (mood: string) => {
+  const handleMoodSelect = (mood: string) => {
     const newEntry: MoodEntry = { mood, timestamp: new Date().toLocaleString(), id: Date.now().toString() };
     setMoodHistory([newEntry, ...moodHistory].slice(0, 20));
-    
-    setIsGenerating(true);
-    setActiveTip(null);
-
-    try {
-      const input: SuggestionInput = {
-        mood: mood,
-        likes: likes.map(item => item.text),
-        dislikes: dislikes.map(item => item.text),
-        communication: communication,
-      };
-      const suggestion = await getSuggestion(input);
-      if (suggestion) {
-        setActiveTip(suggestion);
-      } else {
-        // Fallback to static tip if AI returns an empty response
-        setActiveTip(moodTips[mood as keyof typeof moodTips] || null);
-      }
-    } catch (error) {
-      console.error("Error getting suggestion:", error);
-      // Fallback to static tip on any error
-      setActiveTip(moodTips[mood as keyof typeof moodTips] || null);
-    } finally {
-      setIsGenerating(false);
-    }
+    setActiveTip(moodTips[mood as keyof typeof moodTips] || null);
   };
   
   const deleteMoodEntry = (id: string) => {
@@ -124,19 +92,19 @@ export default function MoodTab() {
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
                 {MOODS.map(mood => (
-                    <Button key={mood.name} onClick={() => handleMoodSelect(mood.name)} variant="outline" className="p-4 h-auto text-lg flex-grow" disabled={isGenerating}>
+                    <Button key={mood.name} onClick={() => handleMoodSelect(mood.name)} variant="outline" className="p-4 h-auto text-lg flex-grow">
                         <span className="text-2xl mr-2">{mood.emoji}</span> {mood.name}
                     </Button>
                 ))}
             </CardContent>
         </Card>
 
-        {(activeTip || isGenerating) && (
+        {activeTip && (
           <Alert>
             <Lightbulb className="h-4 w-4" />
-            <AlertTitle>{isGenerating ? "Suggestion" : "A Helpful Tip"}</AlertTitle>
+            <AlertTitle>A Helpful Tip</AlertTitle>
             <AlertDescription>
-              {isGenerating ? "Generating a personalized tip..." : activeTip}
+              {activeTip}
             </AlertDescription>
           </Alert>
         )}
