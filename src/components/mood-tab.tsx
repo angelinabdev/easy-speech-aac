@@ -5,9 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { Trash2, Printer, Lightbulb } from 'lucide-react';
+import { Trash2, Printer } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 type MoodEntry = { mood: string; timestamp: string, id: string };
 
@@ -32,13 +31,13 @@ const moodTips = {
 
 export default function MoodTab() {
   const [moodHistory, setMoodHistory] = useLocalStorage<MoodEntry[]>('mood_history_v2', []);
-  const [activeTip, setActiveTip] = useState<string | null>(null);
+  const [activeTip, setActiveTip] = useState<string>("Select a mood above to get tips.");
   const chartRef = useRef<HTMLDivElement>(null);
 
   const handleMoodSelect = (mood: string) => {
     const newEntry: MoodEntry = { mood, timestamp: new Date().toLocaleString(), id: Date.now().toString() };
     setMoodHistory([newEntry, ...moodHistory].slice(0, 20));
-    setActiveTip(moodTips[mood as keyof typeof moodTips] || null);
+    setActiveTip(moodTips[mood as keyof typeof moodTips]);
   };
   
   const deleteMoodEntry = (id: string) => {
@@ -99,16 +98,6 @@ export default function MoodTab() {
             </CardContent>
         </Card>
 
-        {activeTip && (
-          <Alert>
-            <Lightbulb className="h-4 w-4" />
-            <AlertTitle>A Helpful Tip</AlertTitle>
-            <AlertDescription>
-              {activeTip}
-            </AlertDescription>
-          </Alert>
-        )}
-        
         <Card>
             <CardHeader>
                 <CardTitle>Mood Analytics</CardTitle>
@@ -146,7 +135,7 @@ export default function MoodTab() {
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="max-h-[340px] overflow-y-auto space-y-2 pr-2">
+            <CardContent className="max-h-[200px] overflow-y-auto space-y-2 pr-2">
                 {moodHistory.length > 0 ? moodHistory.map((entry) => (
                     <div key={entry.id} className="group text-sm text-muted-foreground p-2 bg-secondary rounded-md flex justify-between items-center">
                        <span>{entry.timestamp}: <span className="font-semibold text-foreground">{entry.mood}</span></span>
@@ -156,6 +145,15 @@ export default function MoodTab() {
                     </div>
                 )) : <p className="text-muted-foreground">No mood recorded yet.</p>}
             </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Mood Tips</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">{activeTip}</p>
+          </CardContent>
         </Card>
       </div>
     </div>
