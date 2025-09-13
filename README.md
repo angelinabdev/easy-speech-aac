@@ -1,11 +1,13 @@
 # Easy Speech AAC
-
-Easy Speech AAC is a free, nonprofit, and user-friendly Augmentative and Alternative Communication (AAC) web application designed to empower individuals with communication challenges. Developed through research and personal experience, this tool enables users to express their needs, monitor emotions, and manage daily routines effectively.
+Easy Speech AAC is a free, nonprofit communication tool built to support individuals with autism and other disabilities who face challenges expressing themselves.  
+Unlike costly alternatives, this platform empowers users with accessible, research-driven features designed to improve quality of life for both individuals and caregivers.  
 
 [Link to Live Demo](https://your-live-demo-url.com) &lt;-- *Don't forget to replace this with your actual app link!*
 
-## Key Features
+# Mission  
+Easy Speech AAC was created from personal experience as the caretaker of a nonverbal sibling. The goal is to **make communication easier, more inclusive, and more affordable for everyone.**
 
+# Features  
 - **Role-Based Access:** Separate, tailored experiences for `Users` and `Caregivers`.
 - **Daily Planner:** An interactive, drag-and-drop schedule to organize daily tasks and routines.
 - **Phrase and Soundboard:** Customizable and pre-built phrases and sounds for quick communication, with adjustable voice settings.
@@ -15,8 +17,7 @@ Easy Speech AAC is a free, nonprofit, and user-friendly Augmentative and Alterna
 - **Gamified Learning:** An engaging "Sentence Builder" game to help users practice language skills.
 - **Device-Only Storage:** All user data is stored exclusively on the user's device for maximum privacy and security.
 
-## Technology Stack
-
+# Tech Stack  
 - **Framework:** Next.js (with App Router)
 - **Language:** TypeScript
 - **UI:** React, ShadCN UI, Tailwind CSS
@@ -24,4 +25,17 @@ Easy Speech AAC is a free, nonprofit, and user-friendly Augmentative and Alterna
 - **Speech Synthesis:** Browser Web Speech API
 - **Drag & Drop:** dnd-kit
 
-This project was built to be a free and accessible alternative in the AAC space, aiming to enhance the quality of life for both its users and their caregivers.
+# Found an Issue?
+If you find a bug in the code or any other issues you can help us by submitting an issue to our GitHub Repository.
+
+# Getting Started  
+1. Clone the repository:
+```bash
+git clone https://github.com/angelinabdev/easy-speech-aac.git
+cd easy-speech-aac
+```
+# Contributing
+Contributions are welcome! You can help by submitting bug reports, suggesting features, or submitting pull requests.
+
+# License
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
