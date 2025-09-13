@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Check, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Bell, Check, ThumbsDown, ThumbsUp, HelpCircle, Handshake } from 'lucide-react';
 
 // A single AudioContext is reused to prevent creating multiple instances
 let audioContext: AudioContext | null = null;
@@ -56,8 +56,10 @@ const playTone = (freq1: number, freq2: number, duration: number) => {
 export const SOUNDS = [
     { name: "Yes", icon: ThumbsUp, action: () => speakText("Yes") },
     { name: "No", icon: ThumbsDown, action: () => speakText("No") },
-    { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
     { name: "Okay", icon: Check, action: () => speakText("Okay") },
+    { name: "Help", icon: HelpCircle, action: () => speakText("Help") },
+    { name: "Thank you", icon: Handshake, action: () => speakText("Thank you") },
+    { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
 ];
 
 // Function to initialize audio context on user gesture
