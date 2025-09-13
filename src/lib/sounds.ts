@@ -57,7 +57,6 @@ export const SOUNDS = [
     { name: "Yes", icon: ThumbsUp, action: () => speakText("Yes") },
     { name: "No", icon: ThumbsDown, action: () => speakText("No") },
     { name: "Okay", icon: Check, action: () => speakText("Okay") },
-    { name: "Help", icon: HelpCircle, action: () => speakText("Help") },
     { name: "Thank you", icon: Handshake, action: () => speakText("Thank you") },
     { name: "Bell", icon: Bell, action: () => playTone(987.77, 1318.51, 0.5) },
 ];
