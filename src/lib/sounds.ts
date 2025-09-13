@@ -16,10 +16,21 @@ const getAudioContext = () => {
 const speakText = (text: string) => {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
         const utterance = new SpeechSynthesisUtterance(text);
-        const voices = window.speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en'));
-        const defaultVoice = voices.find(v => v.default);
+        
+        const excludedVoiceNames = [
+          "zarvox", "wobble", "whisper", "trinoids", "shelley", "sandy", 
+          "rocko", "reed", "ralph", "organ", "kathy", "junior", "karen", 
+          "jester", "grandpa", "grandma", "good news", "flo", "eddy", 
+          "cellos", "bubbles", "boing", "bells", "bahh", "bad news", "albert"
+        ];
+
+        let voices = window.speechSynthesis.getVoices()
+          .filter(voice => voice.lang.startsWith('en'))
+          .filter(voice => !excludedVoiceNames.some(excluded => voice.name.toLowerCase().includes(excluded)));
+
         const storedVoiceURI = localStorage.getItem('selected_voice_uri');
         const storedVoice = storedVoiceURI ? voices.find(v => v.voiceURI === JSON.parse(storedVoiceURI)) : null;
+        const defaultVoice = voices.find(v => v.default);
         
         utterance.voice = storedVoice || defaultVoice || voices[0];
         window.speechSynthesis.speak(utterance);
