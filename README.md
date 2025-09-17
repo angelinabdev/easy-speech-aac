@@ -2,7 +2,7 @@
 Easy Speech AAC is a free, nonprofit communication tool built to support individuals with autism and other disabilities who face challenges expressing themselves.  
 Unlike costly alternatives, this platform empowers users with accessible, research-driven features designed to improve quality of life for both individuals and caregivers.  
 
-[Link to Live Demo](https://your-live-demo-url.com) &lt;-- *Don't forget to replace this with your actual app link!*
+[Link to Live Demo](https://your-live-demo-url.com) &lt; (not avalible currently)
 
 # Mission  
 Easy Speech AAC was created from personal experience as the caretaker of a nonverbal sibling. The goal is to **make communication easier, more inclusive, and more affordable for everyone.**
