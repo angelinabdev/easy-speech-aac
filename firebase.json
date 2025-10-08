@@ -1,0 +1,21 @@
+{
+  "hosting": [
+    {
+      "target": "app",
+      "source": ".",
+      "appHosting": {
+        "id": "easyspeech-aac",
+        "region": "us-central1"
+      }
+    },
+    {
+      "target": "web",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
+}

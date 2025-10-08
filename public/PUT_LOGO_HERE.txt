@@ -1,0 +1,5 @@
+1. Delete this file.
+
+2. Add your 'logo.png' file into this 'public' folder.
+
+The app's code is already set up to display it from here.
