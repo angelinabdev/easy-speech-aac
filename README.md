@@ -19,9 +19,6 @@ Core features include:
 *   "About Me" Page: Shareable summary of essential info (contacts, medical notes, likes/dislikes) for doctors, teachers, or new caregivers.
 *   Secure Caregiver Notes: Passcode-protected section for private observations.
 
-**(https://easyspeechaac.com/)**
-*(After you deploy the app, replace the link above with your public URL!)*
-
 # Tech Stack
 
 *   **Framework:** Next.js (with App Router)
