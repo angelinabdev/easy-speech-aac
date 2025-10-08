@@ -1,10 +1,14 @@
 # Easy Speech AAC
 
-Hey Reddit,
-For a long time, I've wanted to work on a project that could make a difference in assistive technology. My sibling is autistic and nonverbal; I saw firsthand how expensive AAC tools can be. Many families can't afford these options.
-Using my experiences in computer science and psychology, I wanted to create a tool to help nonverbal individuals.
+Easy Speech AAC (final version)
+Easy Speech AAC is a free, nonprofit communication tool built to support individuals with autism and other disabilities who face challenges expressing themselves.
+Unlike costly alternatives, this platform empowers users with accessible, research-driven features designed to improve quality of life for both individuals and caregivers.
+
+Mission
+Easy Speech AAC was created from personal experience as the caretaker of a nonverbal sibling. The goal is to make communication easier, more inclusive, and more affordable for everyone.
+
 I decided to build my own solution: Easy Speech AAC (https://easyspeechaac.com/)
-It's a free, web-based tool that can be accessed on all devices. It’s not just a soundboard—it also allows organization, customization, scheduling, and analytics to support communication and daily routines.
+
 Core features include:
 *   Cloud Sync: Works on any device and is tied to a user's account (automatic saves).
 *   Secure Login Page: Everything inside your account is protected by an email and password.
@@ -15,13 +19,7 @@ Core features include:
 *   "About Me" Page: Shareable summary of essential info (contacts, medical notes, likes/dislikes) for doctors, teachers, or new caregivers.
 *   Secure Caregiver Notes: Passcode-protected section for private observations.
 
-I built this from the ground up as a one-person project, and my goal is to keep it free forever.
-Building this was an incredible learning experience, programming and researching for my prototype site for 2 months, and later improving the interface through Firebase. 
-I'm posting here because your feedback is important—since this is a personal project inspired by my own family, I want it to be useful for the audience it's meant for. 
-I'd be grateful for any thoughts, ideas, or critiques you have! Are there features you wish your AAC tools had that I could try to add?
-Thanks for checking it out, Reddit
-
-**[---> PASTE YOUR LIVE DEMO URL HERE <---](https://easyspeechaac.com/)**
+**(https://easyspeechaac.com/)**
 *(After you deploy the app, replace the link above with your public URL!)*
 
 # Tech Stack
@@ -38,6 +36,12 @@ Thanks for checking it out, Reddit
 If you find a bug in the code or any other issues you can help us by submitting an issue to our GitHub Repository.
 
 # Getting Started
+
+This repository contains the improvements of the original Easy Speech AAC application.
+
+The prototype with simpler tech stacks can be reviewed here: https://github.com/angelinabdev/easy-speech-aac-prototype
+
+**Prototype Tech Stack:** HTML, CSS, JavaScript, LocalStorage
 
 1.  Clone the repository:
     ```bash
