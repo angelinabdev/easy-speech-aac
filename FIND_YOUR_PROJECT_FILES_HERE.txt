@@ -2,3 +2,4 @@
 Hello! If you are reading this, you have successfully found your project folder.
 
 All of the code for your "Easy Speech AAC" application is located right here in this folder.
+
