@@ -9,6 +9,15 @@ Easy Speech AAC was created from personal experience as the caretaker of a nonve
 
 I decided to build my own solution: Easy Speech AAC (https://easyspeechaac.com/)
 
+# Tech Stack
+
+*   **Framework:** Next.js (with App Router)
+*   **Language:** TypeScript
+*   **UI:** React, ShadCN UI, Tailwind CSS
+*   **Database:** Firebase Firestore
+*   **Speech Synthesis:** Browser Web Speech API
+*   **Drag & Drop:** dnd-kit
+  
 Core features include:
 *   Cloud Sync: Works on any device and is tied to a user's account (automatic saves).
 *   Secure Login Page: Everything inside your account is protected by an email and password.
@@ -18,15 +27,6 @@ Core features include:
 *   Gamified Learning: Games like "Sentence Builder" and "Emotion Match" to develop language and emotional recognition skills.
 *   "About Me" Page: Shareable summary of essential info (contacts, medical notes, likes/dislikes) for doctors, teachers, or new caregivers.
 *   Secure Caregiver Notes: Passcode-protected section for private observations.
-
-# Tech Stack
-
-*   **Framework:** Next.js (with App Router)
-*   **Language:** TypeScript
-*   **UI:** React, ShadCN UI, Tailwind CSS
-*   **Database:** Firebase Firestore
-*   **Speech Synthesis:** Browser Web Speech API
-*   **Drag & Drop:** dnd-kit
 
 # Found an Issue?
 
