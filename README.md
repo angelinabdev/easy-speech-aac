@@ -1,6 +1,7 @@
 # Easy Speech AAC
 
 Easy Speech AAC (final version)
+
 Easy Speech AAC is a free, nonprofit communication tool built to support individuals with autism and other disabilities who face challenges expressing themselves.
 Unlike costly alternatives, this platform empowers users with accessible, research-driven features designed to improve quality of life for both individuals and caregivers.
 
