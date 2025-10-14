@@ -26,7 +26,7 @@ Core features include:
 *   Interactive Daily Planner: Drag-and-drop schedule to help support routines, with gamified points and levels to keep users motivated.
 *   Mood Tracking & Analytics: Simple mood logging with tips and visual charts to see patterns over time.
 *   Gamified Learning: Games like "Sentence Builder" and "Emotion Match" to develop language and emotional recognition skills.
-*   "About Me" Page: Shareable summary of essential info (contacts, medical notes, likes/dislikes) for doctors, teachers, or new caregivers.
+*   "About Me" Page: Shareable summary of essential info (contacts, medical notes, likes/dislikes) for teachers or new caregivers.
 *   Secure Caregiver Notes: Passcode-protected section for private observations.
 
 # Found an Issue?
