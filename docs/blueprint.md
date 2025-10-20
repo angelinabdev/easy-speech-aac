@@ -1,4 +1,4 @@
-# **App Name**: EasySpeak
+# **App Name**: Easy Speech AAC
 
 ## Core Features:
 
