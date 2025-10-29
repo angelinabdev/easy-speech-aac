@@ -1,0 +1,8 @@
+
+Hello! If you are reading this, you have successfully found your project folder.
+
+All of the code for your "Easy Speech AAC" application is located right here in this folder.
+
+You can now open this folder and see all the files, including `src`, `package.json`, and this text file.
+
+This is the folder you will upload to GitHub.
