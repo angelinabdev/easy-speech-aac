@@ -1,26 +1,57 @@
-Easy Speech AAC is a free, web-based communication and organization platform designed to empower nonverbal individuals—especially those with autism—to express themselves, manage routines, and track emotions. Built with accessibility and empathy at its core, the app combines AAC features, mood tracking, gamified learning, and caregiver analytics in a single, modern tool.
+# Easy Speech AAC
 
-Easy Speech AAC is a comprehensive, modern, and accessible web application designed to empower nonverbal individuals by providing them with powerful tools for communication, organization, and emotional expression. Inspired by personal experience, the app is built as a free, nonprofit tool to serve as a powerful and low-cost alternative to expensive, dedicated AAC devices.
+Easy Speech AAC is a free, nonprofit communication platform built for individuals with autism, intellectual disabilities, and other communication challenges. Designed through both personal and professional experience, this tool removes the financial and usability barriers often found in existing AAC (augmentative and alternative communication) systems. Its mission is to empower users, caregivers, and educators through accessible technology.
 
-## Core Features
+Live Demo: https://easyspeechaac.com
 
-*   **Guest/Demo Mode**: Explore features offline without creating an account
-*   **Cloud Sync**: Automatic save; works on any device and is tied to a user account via Google authentication. All user data is securely stored and isolated by individual accounts. Guest data remains local to the device, while authenticated users’ information is encrypted and synced in real time via Firebase.
-*   **Customizable Phrases & Soundboard**: Express wants, needs, feelings, and words.
-*   **Interactive Daily Planner**: Drag-and-drop schedule with gamified points to motivate users.
-*   **Mood Tracking & Analytics**: Log moods, receive tips, and view charts to see patterns.
-*   **Gamified Learning**: Games like Sentence Builder and Emotion Match improve language and emotional recognition.
-*   **Secure Caregiver Notes**: Passcode-protected for private observations.
-*   **"About Me" Page**: Share info (likes, dislikes, allergies, etc.) with teachers or new caregivers.
+---
 
-I built this project independently, keeping it free or low-cost (about $5–8 per year to cover hosting). It was a huge learning experience: 2 weeks of researching, 2 months of programming, and nearly a month refining the interface.
+## Mission
 
-## Technology Stack
-*   **Framework**: Built with Next.js and React for a fast, responsive, and modern user experience.
-*   **Styling**: Uses Tailwind CSS and ShadCN UI components, providing a clean, professional, and accessible design system with Light/Dark themes and a unique "Calm Mode."
-*   **Backend**: Powered by Firebase, using Firestore for real-time data storage and Firebase Authentication for secure user management via Google Sign-In.
-*   **Accessibility**: Designed in accordance with WCAG 2.1 AA standards, Easy Speech AAC supports screen readers, high-contrast visuals, adjustable font sizes, and Calm Mode for sensory-sensitive users.
+I created Easy Speech AAC after years of supporting my autistic, nonverbal brother. Many AAC tools were expensive, inflexible, or failed to meet his needs — so I built one. The goal is to make communication an accessible right rather than a privilege.
 
-I'd be grateful for feedback—especially on usability, bugs, or missing features. How could this be more helpful for both users and caregivers?
+"Every voice matters — even the ones that haven’t been heard yet."
 
-Thanks for checking it out!
+---
+
+## Features
+
+- Cloud Sync – Save and access data across devices using secure Google login
+- Custom Communication Tools – Create soundboards and phrase lists for wants, needs, feelings, and more
+- Interactive Daily Planner – Drag-and-drop tasks and visualize routines with an optional reward system
+- Mood Tracking with Visual Analytics – Log emotions, get feedback, and identify patterns over time
+- Gamified Learning – Includes Sentence Builder and Emotion Match for developing language and emotional recognition skills
+- Secure Caregiver Notes – Private section protected by a passcode for observations and notes
+- CSV Export – Download logs and data for sharing with therapists or medical professionals
+- “About Me” Page – Summarize user preferences, safety info, and essentials for caregivers, teachers, and providers
+
+---
+
+## Tech Stack
+
+| Area                | Technology                    |
+|---------------------|-------------------------------|
+| Framework           | Next.js (App Router)          |
+| Language            | TypeScript                    |
+| UI                  | React, ShadCN UI, Tailwind CSS|
+| Database            | Firebase Firestore            |
+| Authentication      | Firebase Auth                 |
+| Speech Synthesis    | Web Speech API                |
+| Drag & Drop         | dnd-kit                       |
+
+---
+
+## Getting Started
+
+If you want to run Easy Speech AAC locally, follow these steps:
+
+```bash
+# Clone repository
+git clone https://github.com/angelinabdev/easy-speech-aac.git
+cd easy-speech-aac
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
