@@ -8,9 +8,7 @@ Live Demo: https://easyspeechaac.com
 
 ## Mission
 
-I created Easy Speech AAC after years of supporting my autistic, nonverbal brother. Many AAC tools were expensive, inflexible, or failed to meet his needs — so I built one. The goal is to make communication an accessible right rather than a privilege.
-
-"Every voice matters — even the ones that haven’t been heard yet."
+I created Easy Speech AAC after years of supporting my autistic, nonverbal brother. Many AAC tools were expensive, inflexible, or failed to meet his needs — so I built one. The goal is to make communication accessible for all.
 
 ---
 
