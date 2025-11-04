@@ -4,6 +4,8 @@ Easy Speech AAC is a free, nonprofit communication platform built for individual
 
 Live Demo: https://easyspeechaac.com
 
+To explore the prototype please click this link!: https://github.com/angelinabdev/easy-speech-aac-prototype
+
 ---
 
 ## Mission
