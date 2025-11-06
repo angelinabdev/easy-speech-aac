@@ -1,57 +1,116 @@
-# Easy Speech AAC
-
-Easy Speech AAC is a free, nonprofit communication platform built for individuals with autism, intellectual disabilities, and other communication challenges. Designed through both personal and professional experience, this tool removes the financial and usability barriers often found in existing AAC (augmentative and alternative communication) systems. Its mission is to empower users, caregivers, and educators through accessible technology.
-
-Live Demo: https://easyspeechaac.com
-
-To explore the prototype please click this link!: https://github.com/angelinabdev/easy-speech-aac-prototype
+Got it — here’s a **clean, professional version of the GitHub README** without any emojis or informal icons. It's structured for clarity, impact, and a polished presentation appropriate for college admissions, scholarships, and professional contexts:
 
 ---
 
-## Mission
+# Easy Speech AAC
 
-I created Easy Speech AAC after years of supporting my autistic, nonverbal brother. Many AAC tools were expensive, inflexible, or failed to meet his needs — so I built one. The goal is to make communication accessible for all.
+**A free, full-stack communication platform designed to empower nonverbal and neurodivergent users through accessible, customizable tools.**
+
+Built as a response to gaps in current assistive technologies, this Progressive Web App (PWA) provides streamlined communication, daily planning, and emotional tracking tools to help users build independence and connection.
+
+**Tech Stack:** React, Next.js, Firebase, Firestore, Google Text-to-Speech API
+
+**Live Site:** *[(https://easyspeechaac.com/)]*
+**GitHub Repository:** [https://github.com/angelinabdev/easy-speech-aac](https://github.com/angelinabdev/easy-speech-aac)
+**Prototype Repository:** https://github.com/angelinabdev/easy-speech-aac-prototype
 
 ---
 
 ## Features
 
-- Cloud Sync – Save and access data across devices using secure Google login
-- Custom Communication Tools – Create soundboards and phrase lists for wants, needs, feelings, and more
-- Interactive Daily Planner – Drag-and-drop tasks and visualize routines with an optional reward system
-- Mood Tracking with Visual Analytics – Log emotions, get feedback, and identify patterns over time
-- Gamified Learning – Includes Sentence Builder and Emotion Match for developing language and emotional recognition skills
-- Secure Caregiver Notes – Private section protected by a passcode for observations and notes
-- CSV Export – Download logs and data for sharing with therapists or medical professionals
-- “About Me” Page – Summarize user preferences, safety info, and essentials for caregivers, teachers, and providers
+### Communication & Expression
+
+* **Customizable Soundboard & Phrase Builder**
+  Organize and speak phrases by category: Want, Need, Feel, and Words.
+
+* **Text-to-Speech Support**
+  Phrases are spoken aloud using a variety of Google voice options.
+
+* **Sentence Builder**
+  Drag-and-drop activity helps users practice forming complete sentences.
+
+### Organization & Routine Building
+
+* **Visual Daily Planner**
+  Drag-and-drop scheduler with printable format for offline use.
+
+* **Gamified Task Completion**
+  Users earn points and level up by completing tasks, encouraging engagement.
+
+* **Printable Visual Schedules**
+  Downloadable for use by teachers, caregivers, or therapists.
+
+### Emotional Tracking & Support
+
+* **Mood Tracker**
+  Simple interface allows users to log daily moods.
+
+* **Coping Tips**
+  After mood logging, the platform offers tailored coping strategies.
+
+* **Mood Analytics Dashboard**
+  Visual chart and written journal track emotional patterns over time.
+
+### Caregiver & Professional Tools
+
+* **Private Caregiver Notes**
+  Passcode-protected section for logging progress or behavioral notes.
+
+* **Data Export**
+  Download mood trends, completed tasks, and phrase usage as a CSV or formatted PDF report.
+
+* **Role-Based UI**
+  The interface adjusts depending on user type (caregiver vs. individual user).
+
+### Accessibility & Customization
+
+* **Calm Mode**
+  Sensory-friendly color palette and reduced visual stimulation.
+
+* **Dark Mode & Large Text Options**
+  Built-in settings for visual accessibility.
+
+* **About Me Digital Passport**
+  Centralized profile storing emergency contacts, preferences, medical notes, and key information. Exportable for use in schools or clinics.
+
+* **Offline-First Functionality**
+  All features work offline and sync automatically when reconnected.
+
+* **Authentication Options**
+  Google Sign-In for syncing across devices or Guest Mode for private, local use.
 
 ---
 
-## Tech Stack
+## Technical Overview
 
-| Area                | Technology                    |
-|---------------------|-------------------------------|
-| Framework           | Next.js (App Router)          |
-| Language            | TypeScript                    |
-| UI                  | React, ShadCN UI, Tailwind CSS|
-| Database            | Firebase Firestore            |
-| Authentication      | Firebase Auth                 |
-| Speech Synthesis    | Web Speech API                |
-| Drag & Drop         | dnd-kit                       |
+| Frontend        | Backend & Storage           | Additional Tools              |
+| --------------- | --------------------------- | ----------------------------- |
+| Next.js (React) | Firebase Auth               | Google TTS API                |
+| Tailwind CSS    | Firestore (Offline support) | Chart.js (data visualization) |
+| PWA support     | Firebase Hosting            | CSV & PDF export functions    |
 
 ---
 
-## Getting Started
+## Development Roadmap
 
-If you want to run Easy Speech AAC locally, follow these steps:
+* [x] Secure caregiver-only tools with passcode protection
+* [x] Exportable mood and schedule reports (PDF/CSV)
+* [x] Gamified user dashboard
+* [ ] Add multilingual interface
+* [ ] Long-term device compatibility with external AAC hardware
 
-```bash
-# Clone repository
-git clone https://github.com/angelinabdev/easy-speech-aac.git
-cd easy-speech-aac
+---
 
-# Install dependencies
-npm install
+## Purpose
 
-# Start development server
-npm run dev
+This project was born from a personal need. As a caregiver to a nonverbal, autistic sibling, I experienced firsthand the barriers families face in finding affordable, intuitive, and flexible AAC tools. Easy Speech AAC reflects the belief that technology should meet users where they are — and help them grow beyond.
+
+---
+
+## Contact
+
+If you'd like to learn more or collaborate:
+
+**Email:** [easyspeechaac@gmail.com](mailto:easyspeechaac@gmail.com)
+**Website:** *[(https://easyspeechaac.com/)]*
+**GitHub:** [https://github.com/angelinabdev](https://github.com/angelinabdev)
