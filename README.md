@@ -1,7 +1,3 @@
-Got it — here’s a **clean, professional version of the GitHub README** without any emojis or informal icons. It's structured for clarity, impact, and a polished presentation appropriate for college admissions, scholarships, and professional contexts:
-
----
-
 # Easy Speech AAC
 
 **A free, full-stack communication platform designed to empower nonverbal and neurodivergent users through accessible, customizable tools.**
