@@ -2,13 +2,13 @@
 
 **A free, full-stack communication platform designed to empower nonverbal and neurodivergent users through accessible, customizable tools.**
 
-Built as a response to gaps in current assistive technologies, this Progressive Web App (PWA) provides streamlined communication, daily planning, and emotional tracking tools to help users build independence and connection.
+Built as a response to major gaps in current assistive technology, this Progressive Web App (PWA) combines communication, daily planning, and emotional tracking tools to help users build independence and connection.
 
-**Tech Stack:** React, Next.js, Firebase, Firestore, Google Text-to-Speech API
+---
+## Mission
 
-**Live Site:** *[(https://easyspeechaac.com/)]*
-**GitHub Repository:** [https://github.com/angelinabdev/easy-speech-aac](https://github.com/angelinabdev/easy-speech-aac)
-**Prototype Repository:** https://github.com/angelinabdev/easy-speech-aac-prototype
+To make expressive, dignified communication accessible to everyone — regardless of income, disability, or background.  
+The project began from lived caregiving experience and continues to evolve through feedback from families and accessibility advocates.
 
 ---
 
@@ -77,13 +77,24 @@ Built as a response to gaps in current assistive technologies, this Progressive 
 
 ---
 
-## Technical Overview
+## Tech Stacks
 
 | Frontend        | Backend & Storage           | Additional Tools              |
 | --------------- | --------------------------- | ----------------------------- |
 | Next.js (React) | Firebase Auth               | Google TTS API                |
 | Tailwind CSS    | Firestore (Offline support) | Chart.js (data visualization) |
 | PWA support     | Firebase Hosting            | CSV & PDF export functions    |
+
+---
+
+## ♿ Accessibility
+Easy Speech AAC was designed **accessibility-first**:
+- 100 / 100 **Lighthouse Accessibility** and **SEO** scores  
+- ARIA roles, semantic HTML, and visible focus indicators  
+- Screen-reader compatible, high-contrast compliant (WCAG 2.1 AA)  
+- Audited with **axe DevTools** and manual keyboard testing  
+
+> Recognized by an accessibility professional active in assistive-tech communities for innovation in free communication tools.
 
 ---
 
@@ -108,5 +119,20 @@ This project was born from a personal need. As a caregiver to a nonverbal, autis
 If you'd like to learn more or collaborate:
 
 **Email:** [easyspeechaac@gmail.com](mailto:easyspeechaac@gmail.com)
-**Website:** *[(https://easyspeechaac.com/)]*
+**Website:** [https://easyspeechaac.com](https://easyspeechaac.com)
 **GitHub:** [https://github.com/angelinabdev](https://github.com/angelinabdev)
+**Reddit:** [Disastrous-Motor4217](https://www.reddit.com/user/Disastrous-Motor4217/)  
+**Instagram:** [@easyspeechaac](https://www.instagram.com/easyspeechaac)
+
+---
+
+## Quick Start
+
+```bash
+# Clone and install
+git clone https://github.com/angelinabdev/easy-speech-aac.git
+cd easy-speech-aac
+npm install
+
+# Run locally
+npm run dev
